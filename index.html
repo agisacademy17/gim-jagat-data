@@ -750,6 +750,13 @@ function doGet() {
             }
         };
 
+        // Initialize App
+        window.onload = function() {
+            renderCharacterGrid();
+            loadPlayerProfile();
+            updateStats();
+        }
+
         // Beautiful SVG avatar fallback if Google Drive image load is restricted
         function handleAvatarError(img) {
             img.onerror = null;
@@ -760,6 +767,7 @@ function doGet() {
         // Render 10 jawara selection cards dengan resolusi asli (=s0)
         function renderCharacterGrid() {
             const grid = document.getElementById('character-grid');
+            if (!grid) return;
             grid.innerHTML = jawaraCharacters.map(char => {
                 const directImgUrl = `https://lh3.googleusercontent.com/d/${char.driveId}=s0`;
                 return `
@@ -793,18 +801,67 @@ function doGet() {
             document.getElementById('screen-story-1').classList.add('hidden');
             document.getElementById('screen-story-2').classList.add('hidden');
             document.getElementById('screen-register').classList.remove('hidden');
+            // Force population to double secure nested Iframe lifecycles
+            renderCharacterGrid();
+        }
+
+        // Persistent Session: Auto loading player configurations
+        function loadPlayerProfile() {
+            try {
+                const savedProfile = localStorage.getItem("jagat_data_player_profile");
+                if (savedProfile) {
+                    playerProfile = JSON.parse(savedProfile);
+                    
+                    document.getElementById('player-name-header').innerText = playerProfile.name;
+                    document.getElementById('player-class-header').innerText = `Kelas ${playerProfile.class}`;
+                    
+                    const headerAvatar = document.getElementById('player-avatar-header');
+                    if (headerAvatar) {
+                        headerAvatar.src = playerProfile.avatarUrl;
+                        headerAvatar.setAttribute('data-name', playerProfile.avatarName);
+                    }
+                    
+                    document.getElementById('header-profile').classList.remove('hidden');
+                    document.getElementById('header-profile').classList.add('flex');
+                    
+                    const savedScore = localStorage.getItem("jagat_data_score");
+                    if (savedScore) {
+                        score = parseInt(savedScore);
+                        updateStats();
+                    }
+                    
+                    const savedUnlocked = localStorage.getItem("jagat_data_unlocked_levels");
+                    if (savedUnlocked) {
+                        unlockedLevels = JSON.parse(savedUnlocked);
+                    }
+                    
+                    // Direct bypass to Map
+                    document.getElementById('screen-splash').classList.add('hidden');
+                    document.getElementById('screen-story-1').classList.add('hidden');
+                    document.getElementById('screen-story-2').classList.add('hidden');
+                    document.getElementById('screen-register').classList.add('hidden');
+                    document.getElementById('screen-map').classList.remove('hidden');
+                    renderMap();
+                }
+            } catch(e) {
+                console.log("Local Storage Sandboxed Restrictions Bypass");
+            }
         }
 
         function selectAvatar(id, url, name) {
             jawaraCharacters.forEach(char => {
                 const card = document.getElementById(`char-card-${char.id}`);
-                card.classList.remove('border-sunda-gold', 'bg-sunda-gold/10', 'glow-gold');
-                card.classList.add('border-slate-800', 'bg-sunda-dark');
+                if (card) {
+                    card.classList.remove('border-sunda-gold', 'bg-sunda-gold/10', 'glow-gold');
+                    card.classList.add('border-slate-800', 'bg-sunda-dark');
+                }
             });
 
             const selectedCard = document.getElementById(`char-card-${id}`);
-            selectedCard.classList.remove('border-slate-800', 'bg-sunda-dark');
-            selectedCard.classList.add('border-sunda-gold', 'bg-sunda-gold/10', 'glow-gold');
+            if (selectedCard) {
+                selectedCard.classList.remove('border-slate-800', 'bg-sunda-dark');
+                selectedCard.classList.add('border-sunda-gold', 'bg-sunda-gold/10', 'glow-gold');
+            }
 
             playerProfile.avatarId = id;
             playerProfile.avatarUrl = url;
@@ -841,11 +898,18 @@ function doGet() {
             document.getElementById('header-profile').classList.remove('hidden');
             document.getElementById('header-profile').classList.add('flex');
 
+            try {
+                localStorage.setItem("jagat_data_player_profile", JSON.stringify(playerProfile));
+            } catch(e) {}
+
             startGame();
         }
 
         function updateStats() {
             document.getElementById('player-score').innerText = score;
+            try {
+                localStorage.setItem("jagat_data_score", score);
+            } catch(e) {}
         }
 
         function showCredit() {
@@ -947,8 +1011,8 @@ function doGet() {
                         `).join('');
                     } else {
                         tbody.innerHTML = `
-                            <tr>
-                                <td colspan="5" class="p-8 text-center text-gray-500 italic">
+                            <tr class="text-center text-gray-500">
+                                <td colspan="5" class="p-8 italic">
                                     Database masih kosong. Jadilah yang pertama mengisi papan peringkat!
                                 </td>
                             </tr>
@@ -1358,6 +1422,7 @@ function doGet() {
             renderLevel3(document.getElementById('challenge-playground'));
         }
 
+        // Reset level AI training
         function resetLevel3() {
             setupLevel3(document.getElementById('challenge-playground'));
         }
@@ -1594,6 +1659,24 @@ function doGet() {
             renderMap();
         }
 
+        // Handle boss battle damage
+        function attackBoss(isCorrect, stage) {
+            if (isCorrect) {
+                bossHealth = Math.max(0, bossHealth - 20);
+                if (bossHealth < 1) bossHealth = 0;
+                
+                if (stage === 5 && bossHealth === 0) {
+                    clearInterval(bossTimerInterval);
+                    showFinalEnding();
+                } else {
+                    currentBossStage++;
+                    renderLevel5(document.getElementById('challenge-playground'));
+                }
+            } else {
+                customAlert("SERANGAN DI-TANGKIS", "Aduh! Jawaban kamu kurang tepat. Raksasa Kabut Informasi membalas dengan gelombang distorsi siber! Pikirkan kembali konsep data dan kearifan lokal Sunda.", "💥");
+            }
+        }
+
         // Transition to final success screen
         function showFinalEnding() {
             document.getElementById('screen-play').classList.add('hidden');
@@ -1623,6 +1706,12 @@ function doGet() {
                 avatarName: ""
             };
 
+            try {
+                localStorage.removeItem("jagat_data_player_profile");
+                localStorage.removeItem("jagat_data_unlocked_levels");
+                localStorage.removeItem("jagat_data_score");
+            } catch(e) {}
+
             document.getElementById('header-profile').classList.remove('flex');
             document.getElementById('header-profile').classList.add('hidden');
             
@@ -1644,6 +1733,10 @@ function doGet() {
             if (nextLvl && !unlockedLevels.includes(nextLvl)) {
                 unlockedLevels.push(nextLvl);
             }
+            
+            try {
+                localStorage.setItem("jagat_data_unlocked_levels", JSON.stringify(unlockedLevels));
+            } catch(e) {}
             
             document.getElementById('screen-play').classList.add('hidden');
             document.getElementById('screen-map').classList.remove('hidden');
