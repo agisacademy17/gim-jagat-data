@@ -531,7 +531,7 @@ function doGet() {
                     <!-- Input Form -->
                     <div class="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-800">
                         <input type="text" id="setting-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow bg-sunda-card border border-slate-700 focus:border-sunda-neonBlue rounded-xl px-3 py-2 text-xs text-white outline-none transition-colors">
-                        <button onclick="saveSettings()" class="px-4 py-2 bg-sunda-neonBlue hover:bg-cyan-400 text-sunda-dark font-black text-xs rounded-xl transition-all duration-300 shrink-0 shadow-lg glow-blue">
+                        <button onclick="saveSettings()" class="px-4 py-2 bg-sunda-neonBlue text-sunda-dark font-black text-xs rounded-xl transition-all duration-300 shrink-0 shadow-lg glow-blue">
                             Simpan Setelan
                         </button>
                     </div>
@@ -626,6 +626,7 @@ function doGet() {
         // Penyelarasan Variabel Pewaktuan Global
         let bossTimerInterval = null;
         let bossTimeLeft = 10;
+        let alertCloseCallback = null;
 
         // Dynamic script URL retrieved from localStorage (User-friendly embed config)
         let SCRIPT_URL = localStorage.getItem("jagat_data_script_url") || ""; 
@@ -742,11 +743,11 @@ function doGet() {
         const levelExplanations = {
             1: {
                 title: "KAMPUNG ALGORITMA: Konsep Koding Dasar",
-                desc: "Sampurasun, Raka! Di Kampung Algoritma, kita akan belajar dasar-dasar pemecahan masalah yaitu <b>Algoritma (Sequence)</b>, <b>Perulangan (Loop)</b>, dan <b>Kondisi (If-Else)</b>. Komputer itu kaku, mereka membaca perintah dari baris teratas ke baris terbawah secara berurutan. Sekarang, bantulah emak-emak desa menyusun urutan (Sequence) membuat nasi liwet sunda yang benar agar masakan tidak berantakan!"
+                desc: "Sampurasun, Jawara! Di Kampung Algoritma, kita akan belajar dasar-dasar pemecahan masalah yaitu <b>Algoritma (Sequence)</b>, <b>Perulangan (Loop)</b>, dan <b>Kondisi (If-Else)</b>. Komputer itu kaku, mereka membaca perintah dari baris teratas ke baris terbawah secara berurutan. Sekarang, bantulah emak-emak desa menyusun urutan (Sequence) membuat nasi liwet sunda yang benar agar masakan tidak berantakan!"
             },
             2: {
                 title: "LEUWEUNG DATA: Konsep Analisis Data",
-                desc: "Aduh, Raka! Di Leuweung Data, data hasil panen desa kita tercampur baur dengan data tidak valid dan data ganda (duplikat). Ini membuat lumbung kita (Leuit) tidak efisien. Kita harus belajar <b>Data Cleaning (Pembersihan Data)</b> and <b>Visualisasi Data</b>. Bersihkan baris-baris data kotor dan duplikat dari database pertanian kita agar distribusi merata!"
+                desc: "Aduh, Jawara! Di Leuweung Data, data hasil panen desa kita tercampur baur dengan data tidak valid dan data ganda (duplikat). Ini membuat lumbung kita (Leuit) tidak efisien. Kita harus belajar <b>Data Cleaning (Pembersihan Data)</b> and <b>Visualisasi Data</b>. Bersihkan baris-baris data kotor dan duplikat dari database pertanian kita agar distribusi merata!"
             },
             3: {
                 title: "CURUG AI: Konsep Kecerdasan Artifisial (AI)",
@@ -758,7 +759,7 @@ function doGet() {
             },
             5: {
                 title: "PUNCAK PUSAKA: Integrasi Sistem & Penumpasan Hoaks",
-                desc: "Raka! Kita telah sampai di puncak sakral Gunung Gede Pangrango. Raksasa Kabut Informasi menyerang dengan badai hoaks (Kabar palsu)! Kita harus mengintegrasikan semua ilmu: Algoritma, Pembersihan Data, dan AI untuk menyaring fakta vs hoaks serta memulihkan sistem keamanan Tatar Sunda! <b>Hati-hati! Kamu hanya punya 10 detik untuk menjawab setiap pertanyaan!</b>"
+                desc: "Jawara! Kita telah sampai di puncak sakral Gunung Gede Pangrango. Raksasa Kabut Informasi menyerang dengan badai hoaks (Kabar palsu)! Kita harus mengintegrasikan semua ilmu: Algoritma, Pembersihan Data, dan AI untuk menyaring fakta vs hoaks serta memulihkan sistem keamanan Tatar Sunda! <b>Hati-hati! Kamu hanya punya 10 detik untuk menjawab setiap pertanyaan!</b>"
             }
         };
 
@@ -768,8 +769,8 @@ function doGet() {
                 materiTitle: "Dasar Pemrograman & Logika Komputasional",
                 materiConcept: "Untuk menggerakkan mesin secara terarah, kita menyusun barisan kode instruksi yang sistematis. Konsep utama koding dasar meliputi:",
                 materiPoints: [
-                    "<b>Sequence (Urutan):</b> Komputer membaca instruksi baris-demi-baris secara kaku dari atas ke bawah. Urutan tindakan yang terbalik dapat menyebabkan kegagalan logika.",
-                    "<b>Loop (Perulangan):</b> Mencegah pengetikan instruksi serupa berkali-kali. Berguna untuk memproses data berulang secara otomatis.",
+                    "<b>Sequence (Urutan):</b> Komputer mengeksekusi barisan kode baris-demi-baris secara kaku dari atas ke bawah. Urutan tindakan yang terbalik dapat menyebabkan kegagalan logika.",
+                    "<b>Loop (Perulangan):</b> Mencegah pengetikan instruksi serupa secara berulang. Berguna untuk memproses instruksi otomatis.",
                     "<b>Condition (Kondisi/If-Else):</b> Mengatur komputer untuk mengambil keputusan logis yang berbeda tergantung pada situasi data yang ditemui."
                 ],
                 materiUsage: "Digunakan di Kampung Algoritma untuk menuntun siswa mengatur aktivitas pembuatan Nasi Liwet Sunda tradisional."
@@ -788,7 +789,7 @@ function doGet() {
                 materiTitle: "Konsep Kecerdasan Artifisial & Klasifikasi",
                 materiConcept: "Kecerdasan Buatan (AI) meniru cara berpikir kognitif manusia dengan menganalisis pola informasi historis:",
                 materiPoints: [
-                    "<b>Data Latih (Training Data):</b> Kumpulan sampel data (contoh: ribuan foto tanaman herbal) yang diinput agar sistem AI mengenali ciri visualnya.",
+                    "<b>Data Latih (Training Data):</b> Kumpulan sampel data (contoh: foto-foto tanaman herbal) yang diinput agar sistem AI mengenali ciri visualnya.",
                     "<b>Klasifikasi (Classification):</b> Algoritma AI yang mengelompokkan data baru ke dalam kelompok atau label yang sesuai.",
                     "<b>Akurasi & Bias:</b> Jika data latih yang dimasukkan berat sebelah, keputusan klasifikasi AI akan mengalami bias dan menghasilkan akurasi yang buruk."
                 ],
@@ -798,7 +799,7 @@ function doGet() {
                 materiTitle: "Karakteristik & Teknologi Mahadata (Big Data 3V)",
                 materiConcept: "Ketika jumlah data melampaui kemampuan penyimpanan sistem komputer konvensional, fenomena Mahadata terjadi dengan tiga ciri utama (3V):",
                 materiPoints: [
-                    "<b>Volume (Ukuran):</b> Ukuran data masif berskala Terabyte hingga Zettabyte yang tersimpan dalam jaringan.",
+                    "<b>Volume (Ukuran):</b> Ukuran data masif berskala Terabyte hingga Zettabyte yang disimpan dalam media penyimpanan.",
                     "<b>Velocity (Kecepatan):</b> Laju perpindahan data yang mengalir secara real-time dan berkecepatan tinggi, seperti arus media sosial atau sensor IoT.",
                     "<b>Variety (Keberagaman):</b> Data hadir dalam ragam format tidak terstruktur seperti gambar, video, koordinat GPS, dan teks."
                 ],
@@ -817,11 +818,11 @@ function doGet() {
             }
         };
 
-        // Beautiful SVG avatar fallback if Google Drive image load is restricted
-        function handleAvatarError(img) {
-            img.onerror = null;
-            const name = img.getAttribute('data-name') || "JD";
-            img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=161F30&textColor=D4AF37`;
+        // Initialize App
+        window.onload = function() {
+            renderCharacterGrid();
+            loadPlayerProfile();
+            updateStats();
         }
 
         // Render 10 jawara selection cards dengan resolusi asli (=s0)
@@ -952,8 +953,10 @@ function doGet() {
             document.getElementById('player-class-header').innerText = `Kelas ${playerProfile.class}`;
             
             const headerAvatar = document.getElementById('player-avatar-header');
-            headerAvatar.src = playerProfile.avatarUrl;
-            headerAvatar.setAttribute('data-name', playerProfile.avatarName);
+            if (headerAvatar) {
+                headerAvatar.src = playerProfile.avatarUrl;
+                headerAvatar.setAttribute('data-name', playerProfile.avatarName);
+            }
             
             document.getElementById('header-profile').classList.remove('hidden');
             document.getElementById('header-profile').classList.add('flex');
@@ -1153,6 +1156,7 @@ function doGet() {
             document.getElementById('toko-modal').classList.add('flex');
         }
 
+        // Close Toko Adat
         function closeToko() {
             document.getElementById('toko-modal').classList.add('hidden');
             document.getElementById('toko-modal').classList.remove('flex');
@@ -1178,19 +1182,53 @@ function doGet() {
                 const node = document.getElementById(`node-${i}`);
                 const circle = document.getElementById(`circle-${i}`);
                 if (unlockedLevels.includes(i)) {
-                    node.classList.remove('opacity-50', 'cursor-not-allowed');
-                    node.removeAttribute('disabled');
+                    if (node) {
+                        node.classList.remove('opacity-50', 'cursor-not-allowed');
+                        node.removeAttribute('disabled');
+                    }
                     if (circle) {
                         circle.className = "w-16 h-16 rounded-full bg-sunda-neonBlue text-sunda-dark flex items-center justify-center font-extrabold text-xl glow-blue ring-4 ring-sunda-dark cursor-pointer";
                         if (i === 5) circle.className = "w-16 h-16 rounded-full bg-sunda-gold text-sunda-dark flex items-center justify-center font-extrabold text-xl glow-gold ring-4 ring-sunda-dark cursor-pointer";
                     }
                 } else {
-                    node.classList.add('opacity-50', 'cursor-not-allowed');
-                    node.setAttribute('disabled', 'true');
+                    if (node) {
+                        node.classList.add('opacity-50', 'cursor-not-allowed');
+                        node.setAttribute('disabled', 'true');
+                    }
                     if (circle) {
                         circle.className = "w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark";
                     }
                 }
+            }
+        }
+
+        // Definisi customAlert & closeMsgModal (Dipindahkan ke cakupan global teratas agar bebas ReferenceError)
+        function customAlert(title, desc, icon = "✨", onCloseCallback = null) {
+            const modal = document.getElementById('msg-modal');
+            const mIcon = document.getElementById('msg-icon');
+            const mTitle = document.getElementById('msg-title');
+            const mDesc = document.getElementById('msg-desc');
+            
+            if (mIcon) mIcon.innerText = icon;
+            if (mTitle) mTitle.innerText = title;
+            if (mDesc) mDesc.innerHTML = desc;
+            
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            alertCloseCallback = onCloseCallback;
+        }
+
+        function closeMsgModal() {
+            const modal = document.getElementById('msg-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            if (alertCloseCallback) {
+                alertCloseCallback();
+                alertCloseCallback = null;
             }
         }
 
@@ -1351,8 +1389,12 @@ function doGet() {
             }
 
             if (matches) {
-                gainPangaweruh(100, 2);
-                customAlert("SUCCESS! (Silih Asah)", "Selamat! Algoritma kamu benar. Ibu-ibu desa berhasil menyajikan nasi liwet yang nikmat tanpa gosong. Batu Kecerdasan Pertama berhasil kamu pulihkan!", "🌾");
+                customAlert(
+                    "SUCCESS! (Silih Asah)", 
+                    "Selamat! Algoritma kamu benar. Ibu-ibu desa berhasil menyajikan nasi liwet yang nikmat tanpa gosong. Batu Kecerdasan Pertama berhasil kamu pulihkan!", 
+                    "🌾",
+                    function() { gainPangaweruh(100, 2); }
+                );
             } else {
                 customAlert("EROR: Logika Salah", "Aduh! Nasi liwetnya bantet atau gosong karena urutannya terbalik! Coba pikirkan kembali, bisakah menyalakan api sebelum beras dicuci? Yuk reset dan coba lagi.", "❌");
                 resetLevel1();
@@ -1436,8 +1478,12 @@ function doGet() {
             const valids = currentCrops.filter(row => row.status === "Valid");
 
             if (leftovers.length === 0 && valids.length === 3) {
-                gainPangaweruh(150, 3);
-                customAlert("BERHASIL! (Silih Asih)", "Hebat! Data pangan di Lumbung (Leuit) Tatar Sunda sekarang bersih dan akurat. Masyarakat tahu persis kapan harus mulai menanam berdasarkan visualisasi data. Batu Kecerdasan Kedua didapatkan!", "🌾");
+                customAlert(
+                    "BERHASIL! (Silih Asih)", 
+                    "Hebat! Data pangan di Lumbung (Leuit) Tatar Sunda sekarang bersih dan akurat. Masyarakat tahu persis kapan harus mulai menanam berdasarkan visualisasi data. Batu Kecerdasan Kedua didapatkan!", 
+                    "🌾",
+                    function() { gainPangaweruh(150, 3); }
+                );
             } else {
                 customAlert("DATA MASIH KOTOR", "Oh tidak! Masih ada data palsu, kosong, atau data ganda yang tersisa, atau kamu salah menghapus data valid. Yuk reset dan saring lagi lebih teliti!", "❌");
                 resetLevel2();
@@ -1528,8 +1574,12 @@ function doGet() {
         }
 
         function finishLevel3() {
-            gainPangaweruh(200, 4);
-            customAlert("AKURASI OPTIMAL! (Silih Asuh)", "Keren! Batara Data kini memiliki kecerdasan klasifikasi yang luar biasa. Ia kembali menjaga Curug AI dan memberikan Batu Kecerdasan Ketiga kepada Jawara!", "⚡");
+            customAlert(
+                "AKURASI OPTIMAL! (Silih Asuh)", 
+                "Keren! Batara Data kini memiliki kecerdasan klasifikasi yang luar biasa. Ia kembali menjaga Curug AI dan memberikan Batu Kecerdasan Ketiga kepada Jawara!", 
+                "⚡",
+                function() { gainPangaweruh(200, 4); }
+            );
         }
 
         // ----------------- LEVEL 4 IMPLEMENTATION -----------------
@@ -1596,8 +1646,12 @@ function doGet() {
             if (scoreDisplay) scoreDisplay.innerText = scoreLvl4;
 
             if (scoreLvl4 >= 5) {
-                gainPangaweruh(250, 5);
-                customAlert("DASBOR KOTA PULIH!", "Luar biasa, Jawara! Penyaringan Big Data dengan kecepatan kilat (Velocity) telah berhasil menyelamatkan pusat kendali Kota futuristik Tatar Sunda. Batu Kecerdasan Keempat di tanganmu!", "🏙️");
+                customAlert(
+                    "DASBOR KOTA PULIH!", 
+                    "Luar biasa, Jawara! Penyaringan Big Data dengan kecepatan kilat (Velocity) telah berhasil menyelamatkan pusat kendali Kota futuristik Tatar Sunda. Batu Kecerdasan Keempat di tanganmu!", 
+                    "🏙️",
+                    function() { gainPangaweruh(250, 5); }
+                );
             } else {
                 generateNewStreamItem();
             }
