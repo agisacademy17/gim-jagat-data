@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jagat Data: Petualangan Jawara Tatar Sunda</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sunda: {
+                            dark: '#0B0F19',
+                            card: '#161F30',
+                            gold: '#D4AF37',
+                            neonGreen: '#39FF14',
+                            neonBlue: '#00F0FF',
+                            bamboo: '#87A96B',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0B0F19;
+            color: #E2E8F0;
+            user-select: none;
+        }
+        .glow-gold {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .glow-blue {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #161F30;
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="bg-sunda-card/80 backdrop-blur-md border-b border-sunda-gold/20 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <!-- Logo Gambar Resolusi Tinggi (=s0) -->
+                <div class="w-10 h-10 rounded-xl overflow-hidden border border-sunda-gold/30 glow-gold flex items-center justify-center bg-sunda-dark">
+                    <img src="https://lh3.googleusercontent.com/d/191Z02s6sUvzc2R3PJFDLm1hmD8rWkoOy=s0" alt="Logo Jagat Data" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 class="text-md md:text-lg font-extrabold tracking-wider text-white">JAGAT DATA</h1>
+                    <p class="text-xs text-sunda-gold tracking-widest font-semibold">JAWARA TATAR SUNDA</p>
+                </div>
+            </div>
+
+            <!-- Profile & Stats Dashboard -->
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <!-- Music Control Button -->
+                <button onclick="toggleMusic()" id="btn-music" class="px-3 py-1.5 rounded-lg bg-sunda-dark border border-slate-700 text-xs font-bold text-gray-300 hover:border-sunda-neonBlue transition-all flex items-center gap-1">
+                    🔇 Musik: OFF
+                </button>
+
+                <!-- Leaderboard Button -->
+                <button onclick="openLeaderboard()" class="px-3 py-1.5 rounded-lg bg-sunda-dark border border-slate-700 text-xs font-bold text-sunda-gold hover:border-sunda-gold transition-all flex items-center gap-1">
+                    🏆 Papan Peringkat
+                </button>
+
+                <!-- User Profile Display -->
+                <div id="header-profile" class="hidden items-center space-x-3 bg-sunda-dark/80 px-3 py-1 rounded-xl border border-slate-700">
+                    <img id="player-avatar-header" src="" alt="Avatar" class="w-8 h-8 rounded-full border border-sunda-gold object-cover" onerror="handleAvatarError(this)">
+                    <div class="text-left">
+                        <div id="player-name-header" class="text-xs font-bold text-white leading-none">Siswa</div>
+                        <div id="player-class-header" class="text-[9px] text-sunda-gold">Kelas X</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2 bg-sunda-dark px-3 py-1.5 rounded-lg border border-sunda-gold/30">
+                    <span class="text-sunda-gold text-xs font-bold">✨ PANGAWERUH:</span>
+                    <span id="player-score" class="text-sunda-neonBlue font-extrabold text-sm md:text-base">0</span>
+                </div>
+                <button onclick="openToko()" class="bg-gradient-to-r from-sunda-gold/20 to-sunda-gold hover:from-sunda-gold hover:to-yellow-500 hover:text-sunda-dark text-sunda-gold px-4 py-1.5 rounded-lg transition-all duration-300 font-bold text-xs md:text-sm border border-sunda-gold/50 flex items-center gap-1">
+                    🛍️ Toko Adat
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN GAME CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 flex flex-col justify-center">
+
+        <!-- SCREEN 1: SPLASH / WELCOME SCREEN -->
+        <section id="screen-splash" class="relative min-h-[500px] w-full max-w-4xl mx-auto rounded-3xl overflow-hidden border-2 border-sunda-gold/40 flex flex-col justify-center items-center p-6 md:p-12 animate-fade-in shadow-2xl">
+            <!-- Background Image -->
+            <img src="https://lh3.googleusercontent.com/d/1dRYr3ivMps31rb8c2MtRPQuv0uU8pCWc=s0" alt="Latar Belakang Jagat Data" class="absolute inset-0 w-full h-full object-cover z-0 filter brightness-[0.35]">
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-sunda-dark via-sunda-dark/60 to-transparent z-10"></div>
+            
+            <!-- Glassmorphism Container to enhance readability -->
+            <div class="relative z-20 flex flex-col items-center justify-center space-y-6 max-w-2xl text-center bg-sunda-dark/85 backdrop-blur-md p-8 rounded-2xl border border-sunda-gold/20 shadow-2xl">
+                
+                <!-- Rectangular Frame -->
+                <div class="relative w-full max-w-md h-44 md:h-56 rounded-2xl overflow-hidden border-2 border-sunda-gold glow-gold bg-sunda-dark/50 shadow-2xl transition-transform hover:scale-[1.02] duration-300">
+                    <img src="https://lh3.googleusercontent.com/d/1dRYr3ivMps31rb8c2MtRPQuv0uU8pCWc=s0" alt="Pusaka Jagat Data" class="w-full h-full object-cover">
+                </div>
+
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sunda-gold via-white to-sunda-neonBlue tracking-tight">JAGAT DATA</h2>
+                    <h3 class="text-lg md:text-xl font-bold text-sunda-neonGreen mt-1 uppercase tracking-widest">Petualangan Jawara Tatar Sunda</h3>
+                    <p class="text-xs md:text-sm text-gray-300 mt-4 leading-relaxed">
+                        Siapkah kamu menyelamatkan peradaban nusantara kuno dari gempuran siber modern?
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 w-full justify-center pt-2">
+                    <button onclick="showStory(1)" class="px-6 py-3 bg-gradient-to-r from-sunda-gold to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-sunda-dark text-sm font-bold rounded-xl transition-all duration-300 transform hover:scale-105 glow-gold">
+                        🎮 Mulai Petualangan
+                    </button>
+                    <button onclick="showCredit()" class="px-6 py-3 bg-sunda-card text-white hover:bg-slate-800 text-sm font-bold rounded-xl transition-all duration-300 border border-slate-700">
+                        ℹ️ Panduan Budaya
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: STORY INTRODUCTION PART 1 -->
+        <section id="screen-story-1" class="hidden relative min-h-[500px] rounded-3xl overflow-hidden border-2 border-sunda-gold/40 flex flex-col justify-end p-6 md:p-12 animate-fade-in shadow-2xl">
+            <!-- Background Image -->
+            <img src="https://lh3.googleusercontent.com/d/1dRYr3ivMps31rb8c2MtRPQuv0uU8pCWc=s0" alt="Asal Mula Jagat Data" class="absolute inset-0 w-full h-full object-cover z-0 filter brightness-50">
+            <!-- Gradient Overlay for contrast -->
+            <div class="absolute inset-0 bg-gradient-to-t from-sunda-dark via-sunda-dark/50 to-transparent z-10"></div>
+            
+            <!-- Narrative Box -->
+            <div class="relative z-20 max-w-2xl bg-sunda-dark/90 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-sunda-gold/30">
+                <span class="text-xs font-bold text-sunda-gold uppercase tracking-widest">KEMAKMURAN TATAR SUNDA</span>
+                <h3 class="text-xl md:text-2xl font-extrabold text-white mt-2 mb-4">Pusaka Jagat Data</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                    Di Tatar Sunda kuno yang makmur dan damai, terdapat sebuah artefak suci bernama <b>Pusaka Jagat Data</b>. Artefak ini bertindak sebagai penyeimbang spiritual and penyimpan seluruh pengetahuan, adat, permainan tradisional, serta harmoni kehidupan ekosistem tatar parahyangan. Berkat pusaka ini, masyarakat hidup selaras dengan alam dan kecerdasan berpikir.
+                </p>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="showStory(2)" class="px-6 py-3 bg-sunda-neonBlue hover:bg-cyan-400 text-sunda-dark text-sm font-extrabold rounded-xl transition-all duration-300 flex items-center gap-2">
+                        Lanjut Cerita <span class="text-lg">→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: STORY INTRODUCTION PART 2 -->
+        <section id="screen-story-2" class="hidden relative min-h-[500px] rounded-3xl overflow-hidden border-2 border-red-500/40 flex flex-col justify-end p-6 md:p-12 animate-fade-in shadow-2xl">
+            <!-- Background Image -->
+            <img src="https://lh3.googleusercontent.com/d/1j4p75z6MKLwl7dhLf1nbvmiKXHEJLDKg=s0" alt="Kehancuran Tatar Sunda" class="absolute inset-0 w-full h-full object-cover z-0 filter brightness-50">
+            <!-- Gradient Overlay for contrast -->
+            <div class="absolute inset-0 bg-gradient-to-t from-sunda-dark via-sunda-dark/50 to-transparent z-10"></div>
+            
+            <!-- Narrative Box -->
+            <div class="relative z-20 max-w-2xl bg-sunda-dark/90 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-red-500/30">
+                <span class="text-xs font-bold text-red-400 uppercase tracking-widest">ANCAMAN KABUT MAHADATA</span>
+                <h3 class="text-xl md:text-2xl font-extrabold text-white mt-2 mb-4">Kacau & Hilang Arah</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                    Kedamaian itu sirna seketika saat muncul gangguan misterius bernama <b>Kabut Mahadata (Big Data Fog)</b>. Aliran informasi yang terlampau besar, tidak terstruktur, hoaks, dan spam menyerang sistem pertahanan Pusaka Jagat Data. Warga kehilangan arah, bertengkar karena disinformasi, dan lupa akan kearifan lokal leluhur. Kamu terpilih untuk mengumpulkan Empat Batu Kecerdasan dan memulihkannya!
+                </p>
+                <div class="mt-6 flex justify-between items-center">
+                    <button onclick="showStory(1)" class="text-xs text-gray-400 hover:text-white underline font-semibold">← Kembali</button>
+                    <button onclick="showRegistration()" class="px-6 py-3 bg-gradient-to-r from-sunda-gold to-yellow-500 hover:from-yellow-500 text-sunda-dark text-sm font-extrabold rounded-xl transition-all duration-300 flex items-center gap-2 glow-gold">
+                        Daftar Jawara Muda <span class="text-lg">⚔️</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: REGISTRATION & CHARACTER SELECTION -->
+        <section id="screen-register" class="hidden py-6 px-4 max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6 animate-fade-in">
+            <!-- REGISTRATION FORM -->
+            <div class="w-full bg-sunda-card border-2 border-sunda-gold/30 rounded-2xl p-6 glow-blue max-w-2xl">
+                <h3 class="text-base font-extrabold text-sunda-gold mb-4 uppercase tracking-wider text-center">📝 Pendaftaran Jawara Muda</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-2">NAMA LENGKAP</label>
+                        <input type="text" id="input-name" placeholder="Masukkan nama kamu..." class="w-full bg-sunda-dark border border-slate-700 focus:border-sunda-neonBlue rounded-xl px-4 py-2.5 text-sm text-white outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-2">KELAS (SMP/SMA)</label>
+                        <input type="text" id="input-class" placeholder="Contoh: VII-A atau X-MIPA" class="w-full bg-sunda-dark border border-slate-700 focus:border-sunda-neonBlue rounded-xl px-4 py-2.5 text-sm text-white outline-none transition-colors">
+                    </div>
+                </div>
+
+                <!-- CHARACTER SELECTION GRID -->
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-400 mb-3 text-center">PILIH KARAKTER JAWARA KAMU (1-10)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 max-h-[220px] overflow-y-auto p-2 border border-slate-800 rounded-xl bg-sunda-dark/50" id="character-grid">
+                        <!-- 10 Characters will be injected here -->
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <button onclick="registerPlayer()" class="px-8 py-3 bg-gradient-to-r from-sunda-gold to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-sunda-dark text-sm font-extrabold rounded-xl transition-all duration-300 transform hover:scale-105 glow-gold uppercase tracking-wider">
+                        Masuk ke Peta Dunia 🗺️
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: WORLD MAP / LEVEL SELECT -->
+        <section id="screen-map" class="hidden animate-fade-in">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-extrabold text-white tracking-wide">PETA LEMBAH TATAR SUNDA</h2>
+                <p class="text-sm text-gray-400">Pilih wilayah misi untuk memulihkan Batu Kecerdasan</p>
+            </div>
+
+            <!-- Interactive Map Graphic with Custom Background Image -->
+            <div class="relative w-full max-w-4xl mx-auto border-2 border-sunda-gold/30 rounded-2xl p-6 glow-blue overflow-hidden min-h-[450px] flex flex-col justify-between">
+                <!-- Map Background Image -->
+                <img src="https://lh3.googleusercontent.com/d/1EmNMu9toB1_m_lslOAGb86hS0A7lHPHx=s0" alt="Lembah Tatar Sunda" class="absolute inset-0 w-full h-full object-cover z-0 filter brightness-[0.38] contrast-[1.05]">
+                
+                <!-- Cyber-grid backdrop overlay -->
+                <div class="absolute inset-0 bg-[linear-gradient(rgba(18,24,38,0.45)_1px,_transparent_1px),_linear-gradient(90deg,_rgba(18,24,38,0.45)_1px,_transparent_1px)] bg-[size:30px_30px] opacity-25 z-10"></div>
+                <!-- Soft Dark Gradient to protect text visibility -->
+                <div class="absolute inset-0 bg-gradient-to-t from-sunda-dark via-transparent to-sunda-dark/20 z-10"></div>
+                
+                <!-- Map Nodes -->
+                <div class="relative flex-grow flex flex-col md:flex-row items-center justify-around gap-8 md:gap-4 py-8 z-20">
+                    
+                    <!-- Node 1: Kampung Algoritma -->
+                    <button id="node-1" onclick="selectLevel(1)" class="flex flex-col items-center transition-transform hover:scale-110 focus:outline-none">
+                        <div class="w-16 h-16 rounded-full bg-sunda-neonBlue text-sunda-dark flex items-center justify-center font-extrabold text-xl glow-blue ring-4 ring-sunda-dark">1</div>
+                        <span class="mt-2 text-xs font-extrabold text-sunda-neonBlue tracking-wider bg-sunda-dark/95 px-2 py-1 rounded border border-sunda-neonBlue/30">KAMPUNG ALGORITMA</span>
+                        <span class="text-[10px] text-gray-300 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Koding Dasar</span>
+                    </button>
+
+                    <!-- Connector 1 -->
+                    <div class="hidden md:block flex-grow h-0.5 bg-gradient-to-r from-sunda-neonBlue to-gray-600 z-10"></div>
+
+                    <!-- Node 2: Leuweung Data -->
+                    <button id="node-2" onclick="selectLevel(2)" class="flex flex-col items-center opacity-50 cursor-not-allowed transition-transform hover:scale-110 focus:outline-none" disabled>
+                        <div id="circle-2" class="w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark">2</div>
+                        <span class="mt-2 text-xs font-extrabold text-gray-400 tracking-wider bg-sunda-dark/95 px-2 py-1 rounded border border-gray-700">LEUWEUNG DATA</span>
+                        <span class="text-[10px] text-gray-300 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Analisis Data</span>
+                    </button>
+
+                    <!-- Connector 2 -->
+                    <div class="hidden md:block flex-grow h-0.5 bg-gray-700 z-10"></div>
+
+                    <!-- Node 3: Curug AI -->
+                    <button id="node-3" onclick="selectLevel(3)" class="flex flex-col items-center opacity-50 cursor-not-allowed transition-transform hover:scale-110 focus:outline-none" disabled>
+                        <div id="circle-3" class="w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark">3</div>
+                        <span class="mt-2 text-xs font-extrabold text-gray-400 tracking-wider bg-sunda-dark/95 px-2 py-1 rounded border border-gray-700">CURUG AI</span>
+                        <span class="text-[10px] text-gray-300 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Kecerdasan Buatan</span>
+                    </button>
+
+                    <!-- Connector 3 -->
+                    <div class="hidden md:block flex-grow h-0.5 bg-gray-700 z-10"></div>
+
+                    <!-- Node 4: Kota Mahadata -->
+                    <button id="node-4" onclick="selectLevel(4)" class="flex flex-col items-center opacity-50 cursor-not-allowed transition-transform hover:scale-110 focus:outline-none" disabled>
+                        <div id="circle-4" class="w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark">4</div>
+                        <span class="mt-2 text-xs font-extrabold text-gray-400 tracking-wider bg-sunda-dark/95 px-2 py-1 rounded border border-gray-700">KOTA MAHADATA</span>
+                        <span class="text-[10px] text-gray-300 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Big Data 3V</span>
+                    </button>
+
+                    <!-- Connector 4 -->
+                    <div class="hidden md:block flex-grow h-0.5 bg-gray-700 z-10"></div>
+
+                    <!-- Node 5: Puncak Pusaka -->
+                    <button id="node-5" onclick="selectLevel(5)" class="flex flex-col items-center opacity-50 cursor-not-allowed transition-transform hover:scale-110 focus:outline-none" disabled>
+                        <div id="circle-5" class="w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark">👑</div>
+                        <span class="mt-2 text-xs font-extrabold text-gray-400 tracking-wider bg-sunda-dark/95 px-2 py-1 rounded border border-gray-700">PUNCAK PUSAKA</span>
+                        <span class="text-[10px] text-gray-300 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Pertempuran Akhir</span>
+                    </button>
+
+                </div>
+
+                <!-- Guidance Box at Map Bottom -->
+                <div class="relative bg-sunda-dark/95 border border-sunda-gold/25 p-4 rounded-xl flex items-center space-x-4 z-20 shadow-lg backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-sunda-gold rounded-full flex-shrink-0 flex items-center justify-center text-2xl">👴</div>
+                    <div>
+                        <h4 class="text-xs font-extrabold text-sunda-gold">PANDUAN AKI PANYIMPEN DATA:</h4>
+                        <p class="text-xs text-gray-200">"Setiap wilayah menyimpan satu Batu Kecerdasan. Selesaikan misi secara berurutan, pelajari ilmunya dengan saksama, dan selamatkan Tatar Sunda!"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 6: INTERACTIVE LEVEL PLAY AREA -->
+        <section id="screen-play" class="hidden animate-fade-in max-w-4xl mx-auto">
+            
+            <!-- Guide Dialog Header (Kang Kuri / Sangkuriang 2.0) -->
+            <div id="guide-dialog" class="bg-gradient-to-r from-sunda-card to-slate-900 border-2 border-sunda-gold/40 p-5 rounded-2xl mb-6 relative shadow-2xl flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5">
+                <div class="w-20 h-20 rounded-2xl bg-sunda-gold/20 border border-sunda-gold flex-shrink-0 flex items-center justify-center text-4xl relative overflow-hidden">
+                    👳
+                    <!-- Cyber band bendo badge -->
+                    <div class="absolute bottom-0 inset-x-0 bg-sunda-gold text-[9px] text-sunda-dark font-extrabold text-center uppercase py-0.5 tracking-wider">KANG KURI</div>
+                </div>
+                <div class="flex-grow text-center sm:text-left">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs font-extrabold text-sunda-gold tracking-widest uppercase">Pemandu Jawara</span>
+                        <span id="level-title-tag" class="text-[10px] bg-sunda-neonBlue/10 text-sunda-neonBlue font-bold px-2 py-0.5 rounded border border-sunda-neonBlue/30">LEVEL 1</span>
+                    </div>
+                    <h3 id="guide-subtitle" class="text-base font-bold text-white mb-2">Materi Pembelajaran</h3>
+                    <p id="guide-text" class="text-sm text-gray-300 leading-relaxed">
+                        Memuat materi edukasi...
+                    </p>
+                    <button onclick="startLevelChallenge()" class="mt-4 px-4 py-2 bg-sunda-neonBlue hover:bg-cyan-400 text-sunda-dark text-xs font-extrabold rounded-lg tracking-wider uppercase transition-all duration-300">
+                        Saya Siap! Mulai Tantangan ⚡
+                    </button>
+                </div>
+            </div>
+
+            <!-- LEVEL CHALLENGE PLAYGROUND -->
+            <div id="challenge-playground" class="bg-sunda-card border border-slate-700/50 rounded-2xl p-6 shadow-xl min-h-[350px] flex flex-col justify-center items-center">
+                <!-- Content gets dynamically loaded here depending on active level -->
+            </div>
+
+        </section>
+
+        <!-- SCREEN 7: STORY ENDING / FINAL SUCCESS SCREEN -->
+        <section id="screen-ending" class="hidden relative min-h-[550px] w-full max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-sunda-gold flex flex-col justify-between p-6 md:p-12 animate-fade-in shadow-2xl">
+            <!-- Restored Peaceful Tatar Sunda Background Image dengan resolusi asli (=s0) -->
+            <img src="https://lh3.googleusercontent.com/d/1dRYr3ivMps31rb8c2MtRPQuv0uU8pCWc=s0" alt="Tatar Sunda Kembali Damai" class="absolute inset-0 w-full h-full object-cover z-0 filter brightness-[0.4] contrast-[1.1]">
+            <div class="absolute inset-0 bg-gradient-to-t from-sunda-dark via-sunda-dark/40 to-transparent z-10"></div>
+
+            <div class="relative z-20 w-full text-center space-y-6">
+                <!-- Celebration Header -->
+                <div class="bg-sunda-dark/85 backdrop-blur-md p-6 rounded-2xl border border-sunda-gold/30 max-w-2xl mx-auto shadow-xl">
+                    <span class="text-xs font-black text-sunda-neonGreen tracking-widest uppercase">🎉 PETUALANGAN SELESAI 🎉</span>
+                    <h2 class="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sunda-gold via-white to-sunda-neonBlue tracking-wide mt-2">TATAR SUNDA KEMBALI MAKMUR</h2>
+                    <p class="text-xs md:text-sm text-gray-200 mt-4 leading-relaxed">
+                        Kabut Mahadata yang menyesatkan telah berhasil disirnakan! Berkat kearifan dan kecerdasan data kamu, <b>Pusaka Jagat Data</b> kini kembali memancar harmoni. Di bawah lembah yang hijau, anak-anak Tatar Sunda kembali berkumpul riang gembira memainkan <i>Egrang</i>, <i>Galah Asin</i>, dan <i>Congklak</i>. Alunan suara Angklung Bambu yang merdu kembali terdengar selaras menemani tawa riang mereka.
+                    </p>
+                </div>
+
+                <!-- Relics (5 Pusaka) Grid Showcase -->
+                <div class="max-w-3xl mx-auto">
+                    <h3 class="text-xs font-extrabold text-sunda-gold tracking-widest uppercase mb-4">🏆 5 PUSAKA & BATU KECERDASAN YANG DIPULIHKAN:</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        
+                        <!-- Pusaka 1 -->
+                        <div class="bg-sunda-dark/90 border border-sunda-neonBlue rounded-xl p-3 flex flex-col items-center justify-center glow-blue text-center">
+                            <span class="text-2xl">🟢</span>
+                            <h4 class="text-[10px] font-black text-sunda-neonBlue mt-1.5 uppercase leading-tight">Batu Logika</h4>
+                            <p class="text-[8px] text-gray-400 mt-0.5">Kampung Algoritma</p>
+                        </div>
+
+                        <!-- Pusaka 2 -->
+                        <div class="bg-sunda-dark/90 border border-sunda-neonGreen rounded-xl p-3 flex flex-col items-center justify-center glow-green text-center">
+                            <span class="text-2xl">🔵</span>
+                            <h4 class="text-[10px] font-black text-sunda-neonGreen mt-1.5 uppercase leading-tight">Batu Kemurnian</h4>
+                            <p class="text-[8px] text-gray-400 mt-0.5">Leuweung Data</p>
+                        </div>
+
+                        <!-- Pusaka 3 -->
+                        <div class="bg-sunda-dark/90 border border-purple-500 rounded-xl p-3 flex flex-col items-center justify-center text-center" style="box-shadow: 0 0 15px rgba(168, 85, 247, 0.4)">
+                            <span class="text-2xl">🟣</span>
+                            <h4 class="text-[10px] font-black text-purple-400 mt-1.5 uppercase leading-tight">Batu Batara AI</h4>
+                            <p class="text-[8px] text-gray-400 mt-0.5">Curug AI</p>
+                        </div>
+
+                        <!-- Pusaka 4 -->
+                        <div class="bg-sunda-dark/90 border border-yellow-500 rounded-xl p-3 flex flex-col items-center justify-center text-center" style="box-shadow: 0 0 15px rgba(234, 179, 8, 0.4)">
+                            <span class="text-2xl">🟡</span>
+                            <h4 class="text-[10px] font-black text-yellow-400 mt-1.5 uppercase leading-tight">Batu Saringan</h4>
+                            <p class="text-[8px] text-gray-400 mt-0.5">Kota Mahadata</p>
+                        </div>
+
+                        <!-- Pusaka 5 -->
+                        <div class="bg-sunda-dark/90 border border-sunda-gold rounded-xl p-3 flex flex-col items-center justify-center glow-gold text-center">
+                            <span class="text-2xl">👑</span>
+                            <h4 class="text-[10px] font-black text-sunda-gold mt-1.5 uppercase leading-tight">Jagat Data</h4>
+                            <p class="text-[8px] text-gray-400 mt-0.5">Puncak Pusaka</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Back to Menu button -->
+                <div class="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="restartFullGame()" class="px-8 py-3 bg-gradient-to-r from-sunda-gold to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-sunda-dark text-sm font-bold rounded-xl transition-all duration-300 transform hover:scale-105 glow-gold uppercase tracking-wider">
+                        Mainkan Lagi Dari Awal 🔄
+                    </button>
+                    <button onclick="openLeaderboard()" class="px-8 py-3 bg-sunda-card text-white hover:bg-slate-800 text-sm font-bold rounded-xl transition-all duration-300 border border-slate-700 uppercase tracking-wider">
+                        🏆 Lihat Papan Peringkat
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOKO ADAT MODAL -->
+    <div id="toko-modal" class="fixed inset-0 bg-sunda-dark/95 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-sunda-card border-2 border-sunda-gold rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
+            <button onclick="closeToko()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-extrabold text-sunda-gold tracking-wide">🛍️ TOKO ADAT DIGITAL</h3>
+                <p class="text-sm text-gray-400">Gunakan poin <b>Pangaweruh</b> untuk melestarikan kebudayaan Sunda</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-2">
+                <!-- Item 1 -->
+                <div class="bg-sunda-dark p-4 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">🥋 Kostum Jawara Neon</h4>
+                        <p class="text-xs text-gray-400">Pangsi modern bermotif sirkuit biru</p>
+                        <span class="text-xs text-sunda-gold font-bold">Harga: 100 Poin</span>
+                    </div>
+                    <button onclick="buyItem('Kostum Jawara Neon', 100)" class="px-3 py-1 bg-sunda-gold/20 hover:bg-sunda-gold text-sunda-gold hover:text-sunda-dark font-bold text-xs rounded transition-all duration-300 border border-sunda-gold/50">Beli</button>
+                </div>
+                <!-- Item 2 -->
+                <div class="bg-sunda-dark p-4 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">🎨 Tema Batik Megamendung</h4>
+                        <p class="text-xs text-gray-400">Mengubah estetik latar belakang visual</p>
+                        <span class="text-xs text-sunda-gold font-bold">Harga: 200 Poin</span>
+                    </div>
+                    <button onclick="buyItem('Tema Batik Megamendung', 200)" class="px-3 py-1 bg-sunda-gold/20 hover:bg-sunda-gold text-sunda-gold hover:text-sunda-dark font-bold text-xs rounded transition-all duration-300 border border-sunda-gold/50">Beli</button>
+                </div>
+                <!-- Item 3 -->
+                <div class="bg-sunda-dark p-4 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">🎵 Waditra Angklung Digital</h4>
+                        <p class="text-xs text-gray-400">Akses instrumen bambu interaktif di lobi</p>
+                        <span class="text-xs text-sunda-gold font-bold">Harga: 300 Poin</span>
+                    </div>
+                    <button onclick="buyItem('Waditra Angklung Digital', 300)" class="px-3 py-1 bg-sunda-gold/20 hover:bg-sunda-gold text-sunda-gold hover:text-sunda-dark font-bold text-xs rounded transition-all duration-300 border border-sunda-gold/50">Beli</button>
+                </div>
+                <!-- Item 4 -->
+                <div class="bg-sunda-dark p-4 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">🎖️ Badge Mahadata Master</h4>
+                        <p class="text-xs text-gray-400">Gelar kelulusan utama Tatar Sunda</p>
+                        <span class="text-xs text-sunda-gold font-bold">Harga: 400 Poin</span>
+                    </div>
+                    <button onclick="buyItem('Badge Mahadata Master', 400)" class="px-3 py-1 bg-sunda-gold/20 hover:bg-sunda-gold text-sunda-gold hover:text-sunda-dark font-bold text-xs rounded transition-all duration-300 border border-sunda-gold/50">Beli</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD MODAL (🏆 PAPAN PERINGKAT SISWA & INTEGRASI DATABASE) -->
+    <div id="leaderboard-modal" class="fixed inset-0 bg-sunda-dark/95 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-sunda-card border-2 border-sunda-gold rounded-2xl max-w-3xl w-full p-6 relative shadow-2xl flex flex-col max-h-[90vh]">
+            <button onclick="closeLeaderboard()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <div class="text-center mb-4 shrink-0">
+                <h3 class="text-2xl font-extrabold text-sunda-gold tracking-wide flex items-center justify-center gap-2">🏆 PAPAN PERINGKAT JAWARA</h3>
+                <p class="text-sm text-gray-400">Rekapitulasi nilai dan kecepatan komputasi siswa Tatar Sunda</p>
+            </div>
+
+            <!-- COLLAPSIBLE ACCORDION: SETELAN & PANDUAN INTEGRASI SPREADSHEET -->
+            <div class="border border-slate-700 rounded-xl mb-4 bg-sunda-dark overflow-hidden shrink-0">
+                <button onclick="toggleIntegrationAccordion()" class="w-full text-left p-3 bg-slate-800/80 hover:bg-slate-800 text-xs font-extrabold text-sunda-gold flex justify-between items-center">
+                    <span>⚙️ ATUR INTEGRASI & TATA CARA HUBUNGKAN GOOGLE SCRIPT</span>
+                    <span id="accordion-arrow">▼</span>
+                </button>
+                
+                <div id="integration-panel" class="hidden p-4 border-t border-slate-700 bg-sunda-dark space-y-4 max-h-[250px] overflow-y-auto">
+                    <!-- Steps Tutorial -->
+                    <div class="text-xs text-gray-300 space-y-2">
+                        <p class="font-bold text-white text-sm mb-1">📋 Langkah-Langkah Sinkronisasi Google Sheets:</p>
+                        <ol class="list-decimal pl-4 space-y-1 text-gray-400">
+                            <li>Buat spreadsheet baru di Google Drive Anda.</li>
+                            <li>Buka menu <b>Ekstensi</b> &gt; <b>Apps Script</b>.</li>
+                            <li>Tempelkan kode database Apps Script (salin di bawah ini) ke dalam editor script.</li>
+                            <li>Simpan proyek, lalu klik tombol biru <b>Terapkan (Deploy)</b> di kanan atas &gt; pilih <b>Terapkan Baru</b>.</li>
+                            <li>Pilih Jenis: <b>Aplikasi Web (Web App)</b>. Setel jalankan sebagai: <i>Saya (Me)</i>, dan Akses: <i>Siapa saja (Anyone)</i>.</li>
+                            <li>Klik Terapkan, lalu <b>Salin Tautan Aplikasi Web (Web App URL)</b> yang dihasilkan.</li>
+                            <li>Tempelkan tautan URL tersebut di kolom bawah ini dan klik <b>Simpan Setelan</b>.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Code Copy Area -->
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-500 mb-1 uppercase">Kode Google Apps Script (.gs):</span>
+                        <textarea class="w-full h-24 bg-sunda-card border border-slate-800 rounded p-2 text-[10px] font-mono text-gray-400 outline-none select-text" readonly onclick="this.select()">/**
+ * GOOGLE APPS SCRIPT DATABASE INTEGRATION
+ */
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["Tanggal Misi Selesai", "Nama Siswa", "Kelas", "Karakter Pahlawan", "Skor Pangaweruh"]);
+    }
+    var data = JSON.parse(e.postData.contents);
+    var timestamp = new Date();
+    sheet.appendRow([timestamp, data.name, data.class, data.avatar, data.score]);
+    return ContentService.createTextOutput(JSON.stringify({ "status": "success" })).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+function doGet() {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var rows = sheet.getDataRange().getValues();
+    var dataList = [];
+    for (var i = 1; i < rows.length; i++) {
+      dataList.push({timestamp: rows[i][0], name: rows[i][1], class: rows[i][2], avatar: rows[i][3], score: parseInt(rows[i][4])});
+    }
+    dataList.sort(function(a, b) { return b.score - a.score; });
+    return ContentService.createTextOutput(JSON.stringify(dataList.slice(0, 20))).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+  }
+}</textarea>
+                    </div>
+
+                    <!-- Input Form -->
+                    <div class="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-800">
+                        <input type="text" id="setting-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow bg-sunda-card border border-slate-700 focus:border-sunda-neonBlue rounded-xl px-3 py-2 text-xs text-white outline-none transition-colors">
+                        <button onclick="saveSettings()" class="px-4 py-2 bg-sunda-neonBlue hover:bg-cyan-400 text-sunda-dark font-black text-xs rounded-xl transition-all duration-300 shrink-0 shadow-lg glow-blue">
+                            Simpan Setelan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Control Box -->
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-sunda-dark p-3 rounded-xl border border-slate-700/60 mb-4 gap-3 shrink-0">
+                <span class="text-xs text-gray-400 text-center sm:text-left leading-relaxed">
+                    Sinkronkan data dengan basis data Google Sheets untuk melihat rekapitulasi nilai terbaru kelas Anda.
+                </span>
+                <button onclick="fetchLeaderboard()" id="btn-sync-leaderboard" class="px-4 py-2 bg-sunda-neonBlue hover:bg-cyan-400 text-sunda-dark font-extrabold text-xs rounded-lg transition-all duration-300 flex items-center gap-1.5 shrink-0">
+                    🔄 Sinkron Data
+                </button>
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto bg-sunda-dark border border-slate-800 rounded-xl overflow-y-auto flex-grow min-h-[150px]">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800/80 border-b border-slate-700 text-[10px] md:text-xs text-sunda-gold uppercase tracking-wider sticky top-0">
+                            <th class="p-3 text-center w-16">Peringkat</th>
+                            <th class="p-3">Siswa</th>
+                            <th class="p-3">Kelas</th>
+                            <th class="p-3">Karakter</th>
+                            <th class="p-3 text-right">Skor Pangaweruh</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-table-body" class="text-xs text-gray-300">
+                        <!-- Dynamic spreadsheet rows injected here -->
+                        <tr>
+                            <td colspan="5" class="p-8 text-center text-gray-500 italic">
+                                Belum ada data. Silakan tekan tombol "Sinkron Data" untuk memuat...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENERAL MESSAGE MODAL -->
+    <div id="msg-modal" class="fixed inset-0 bg-sunda-dark/90 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-sunda-card border border-sunda-gold/50 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl">
+            <div id="msg-icon" class="text-4xl mb-3">✨</div>
+            <h4 id="msg-title" class="text-lg font-bold text-white mb-2">Pemberitahuan</h4>
+            <p id="msg-desc" class="text-sm text-gray-300 mb-6 leading-relaxed">Pesan default.</p>
+            <button onclick="closeMsgModal()" class="px-6 py-2 bg-sunda-gold text-sunda-dark font-bold rounded-lg hover:bg-yellow-500 transition-all duration-300 text-sm">
+                Baik, Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- PANDUAN BUDAYA MODAL -->
+    <div id="credit-modal" class="fixed inset-0 bg-sunda-dark/95 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-sunda-card border-2 border-sunda-gold rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
+            <button onclick="closeCredit()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <div class="text-center mb-4">
+                <h3 class="text-2xl font-extrabold text-sunda-gold">📖 PANDUAN & NILAI BUDAYA</h3>
+                <p class="text-xs text-gray-400">Integrasi Nilai Filosofi Sunda dalam Teknologi</p>
+            </div>
+            <div class="space-y-4 max-h-[350px] overflow-y-auto text-sm text-gray-300 leading-relaxed pr-2">
+                <div class="border-l-4 border-sunda-gold pl-3">
+                    <h4 class="font-extrabold text-white text-xs uppercase tracking-wider">Silih Asih (Saling Mengasihi)</h4>
+                    <p class="text-xs text-gray-400 mt-1">Menggunakan keterampilan teknologi, analisis data, dan kecerdasan buatan untuk membantu sesama, memecahkan masalah kedaulatan pangan, serta melestarikan kearifan lokal Tatar Sunda.</p>
+                </div>
+                <div class="border-l-4 border-sunda-neonBlue pl-3">
+                    <h4 class="font-extrabold text-white text-xs uppercase tracking-wider">Silih Asah (Saling Mencerdaskan)</h4>
+                    <p class="text-xs text-gray-400 mt-1">Pembelajaran koding, algoritma, klasifikasi AI, serta analisis Big data yang dirancang menyenangkan dan mudah dipahami siswa agar siap menghadapi era kedaulatan digital.</p>
+                </div>
+                <div class="border-l-4 border-sunda-neonGreen pl-3">
+                    <h4 class="font-extrabold text-white text-xs uppercase tracking-wider">Silih Asuh (Saling Membimbing)</h4>
+                    <p class="text-xs text-gray-400 mt-1">Menumbuhkan kesadaran siber yang beretika, memilah berita hoaks, menyaring jutaan data berkecepatan tinggi agar tidak menyesatkan ekosistem sosial Tatar Sunda.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-sunda-dark border-t border-slate-800 p-4 text-center text-xs text-gray-500">
+        <p>© 2026 Jagat Data. Semua Hak Dilindungi. Dibuat dengan kearifan lokal Sunda Wiwitan & Teknologi Masa Depan.</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // Global variables
+        let score = 0;
+        let activeLevel = 1;
+        let unlockedLevels = [1];
+        let inventory = [];
+
+        // Dynamic script URL retrieved from localStorage (User-friendly embed config)
+        let SCRIPT_URL = localStorage.getItem("jagat_data_script_url") || ""; 
+
+        // Player registration state
+        let playerProfile = {
+            name: "",
+            class: "",
+            avatarId: null,
+            avatarUrl: "",
+            avatarName: ""
+        };
+
+        // Procedural Audio Engine (Web Audio API)
+        let audioCtx = null;
+        let musicPlaying = false;
+        let musicInterval = null;
+        let musicTempo = 135; // Semangat Petualangan (BPM)
+        let musicStep = 0;
+
+        // Traditional Pentatonic & Heroic scale melody steps
+        const adventureMelody = [60, 62, 64, 67, 69, 72, 69, 67]; // Heroic Major Pentatonic
+        const adventureBass = [36, 36, 40, 40, 43, 43, 38, 38];
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSynthTone(freq, type, duration, vol, delay = 0) {
+            if (!audioCtx) return;
+            
+            setTimeout(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            }, delay * 1000);
+        }
+
+        function playMusicLoop() {
+            if (!musicPlaying) return;
+
+            if (musicStep % 2 === 0) {
+                playSynthTone(55, 'sine', 0.2, 0.4); // Kick
+            }
+            if (musicStep % 4 === 2) {
+                playSynthTone(220, 'triangle', 0.1, 0.1); // Snare
+            }
+
+            const bassNote = adventureBass[musicStep % adventureBass.length];
+            const bassFreq = Math.pow(2, (bassNote - 69) / 12) * 440;
+            playSynthTone(bassFreq, 'sawtooth', 0.25, 0.1);
+
+            if (musicStep % 2 === 0) {
+                const melodyIdx = Math.floor(musicStep / 2) % adventureMelody.length;
+                const melodyNote = adventureMelody[melodyIdx];
+                const melodyFreq = Math.pow(2, (melodyNote - 69) / 12) * 440;
+                playSynthTone(melodyFreq, 'triangle', 0.4, 0.12);
+            }
+
+            musicStep++;
+        }
+
+        function toggleMusic() {
+            initAudio();
+            const btn = document.getElementById('btn-music');
+            
+            if (!musicPlaying) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                musicPlaying = true;
+                musicStep = 0;
+                musicInterval = setInterval(playMusicLoop, (60 / musicTempo) * 500);
+                btn.innerText = "🔊 Musik: ON";
+                btn.classList.add('text-sunda-neonBlue', 'border-sunda-neonBlue');
+                btn.classList.remove('text-gray-300', 'border-slate-700');
+            } else {
+                musicPlaying = false;
+                clearInterval(musicInterval);
+                btn.innerText = "🔇 Musik: OFF";
+                btn.classList.remove('text-sunda-neonBlue', 'border-sunda-neonBlue');
+                btn.classList.add('text-gray-300', 'border-slate-700');
+            }
+        }
+
+        // 10 Character Data mapping directly to Google Drive Direct-View API links
+        const jawaraCharacters = [
+            { id: 1, name: "Prabu", desc: "Jawara Logika Kuno", driveId: "1Z_15TxFbsADIwUfXdg3L8WEPSauwLmaR" },
+            { id: 2, name: "Siliwangi", desc: "Sumbu Pengetahuan", driveId: "1EWR1PFAPhRW_FSTcOEgFkqiUsMaWn0zo" },
+            { id: 3, name: "Rangga", desc: "Penerjemah Kode Sandi", driveId: "1MLb8ASA9tle6GuVXFDF0EqK5Q1IltjSs" },
+            { id: 4, name: "Purba", desc: "Pengawal Gerbang Data", driveId: "1rg_OpZEmx_3D3JC8T14As6zDcdRbZ63-" },
+            { id: 5, name: "Kamuning", desc: "Peneliti Hutan Adat", driveId: "1lyGD1hMx7P-HFGR4Jg3HwPPVpP2Cp6V6" },
+            { id: 6, name: "Pajajaran", desc: "Arsitek Jagat Baru", driveId: "1OzJ86JzI114k1G070OS6HNLcOgwgnows" },
+            { id: 7, name: "Bima", desc: "Pelatih Batara AI", driveId: "1DKn0XEh-1ciZRA4YufoalZpLoH7fwZ78" },
+            { id: 8, name: "Kusuma", desc: "Srikandi Big Data", driveId: "13CKevqWBvzfTyj3CIWUyporkSohgmS9U" },
+            { id: 9, name: "Surya", desc: "Penyaring Kabut Hoax", driveId: "1nDo_5STTLSN-O2ZlnySUGxm76u9Bvtic" },
+            { id: 10, name: "Subang", desc: "Penjaga Puncak Pusaka", driveId: "1de8cZffLNx2Rhn_KLP8PWdxky9kKCCTo" }
+        ];
+
+        // Level explanations by Kang Kuri
+        const levelExplanations = {
+            1: {
+                title: "KAMPUNG ALGORITMA: Konsep Koding Dasar",
+                desc: "Sampurasun, Raka! Di Kampung Algoritma, kita akan belajar dasar-dasar pemecahan masalah yaitu <b>Algoritma (Sequence)</b>, <b>Perulangan (Loop)</b>, dan <b>Kondisi (If-Else)</b>. Komputer itu kaku, mereka membaca perintah dari baris teratas ke baris terbawah secara berurutan. Sekarang, bantulah emak-emak desa menyusun urutan (Sequence) membuat nasi liwet sunda yang benar agar masakan tidak berantakan!"
+            },
+            2: {
+                title: "LEUWEUNG DATA: Konsep Analisis Data",
+                desc: "Aduh, Raka! Di Leuweung Data, data hasil panen desa kita tercampur baur dengan data tidak valid dan data ganda (duplikat). Ini membuat lumbung kita (Leuit) tidak efisien. Kita harus belajar <b>Data Cleaning (Pembersihan Data)</b> and <b>Visualisasi Data</b>. Bersihkan baris-baris data kotor dan duplikat dari database pertanian kita agar distribusi merata!"
+            },
+            3: {
+                title: "CURUG AI: Konsep Kecerdasan Artifisial (AI)",
+                desc: "Sampurasun! Di Curug AI mistis ini, robot penjaga Batara Data lupa membedakan mana <b>Tanaman Obat</b> (seperti Daun Sirih) dan mana <b>Tanaman Beracun</b> (seperti Daun Jelatang). Kita harus melatih model AI menggunakan <b>Data Latih (Training Data)</b> agar Batara Data bisa melakukan klasifikasi dengan akurasi tinggi!"
+            },
+            4: {
+                title: "KOTA MAHADATA: Konsep Pemanfaatan Big Data 3V",
+                desc: "Waduh! Kota futuristik kita kebanjiran jutaan data lalu lintas, media sosial, dan polusi udara. Inilah fenomena <b>Big Data</b> dengan prinsip <b>3V: Volume (Besar), Velocity (Cepat), dan Variety (Beragam)</b>. Bantu filter aliran data super cepat menggunakan sistem 'Saring Jagat' agar kota tidak gridlock!"
+            },
+            5: {
+                title: "PUNCAK PUSAKA: Integrasi Sistem & Penumpasan Hoaks",
+                desc: "Raka! Kita telah sampai di puncak sakral Gunung Gede Pangrango. Raksasa Kabut Informasi menyerang dengan badai hoaks (Kabar palsu)! Kita harus mengintegrasikan semua ilmu: Algoritma, Pembersihan Data, dan AI untuk menyaring fakta vs hoaks serta memulihkan sistem keamanan Tatar Sunda! <b>Hati-hati! Kamu hanya punya 10 detik untuk menjawab setiap pertanyaan!</b>"
+            }
+        };
+
+        // Beautiful SVG avatar fallback if Google Drive image load is restricted
+        function handleAvatarError(img) {
+            img.onerror = null;
+            const name = img.getAttribute('data-name') || "JD";
+            img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=161F30&textColor=D4AF37`;
+        }
+
+        // Render 10 jawara selection cards dengan resolusi asli (=s0)
+        function renderCharacterGrid() {
+            const grid = document.getElementById('character-grid');
+            grid.innerHTML = jawaraCharacters.map(char => {
+                const directImgUrl = `https://lh3.googleusercontent.com/d/${char.driveId}=s0`;
+                return `
+                    <div id="char-card-${char.id}" onclick="selectAvatar(${char.id}, '${directImgUrl}', '${char.name}')" class="bg-sunda-dark border-2 border-slate-800 rounded-xl p-2 text-center cursor-pointer transition-all hover:border-sunda-gold/60">
+                        <div class="relative w-14 h-14 mx-auto mb-1 rounded-lg overflow-hidden bg-slate-900 border border-slate-700">
+                            <img src="${directImgUrl}" alt="${char.name}" data-name="${char.name}" class="w-full h-full object-cover" onerror="handleAvatarError(this)">
+                        </div>
+                        <h4 class="text-[11px] font-bold text-white truncate">${char.name}</h4>
+                        <p class="text-[8px] text-gray-500 truncate">${char.desc}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Navigation between Intro stages & Registration
+        function showStory(stageNum) {
+            document.getElementById('screen-splash').classList.add('hidden');
+            document.getElementById('screen-story-1').classList.add('hidden');
+            document.getElementById('screen-story-2').classList.add('hidden');
+            document.getElementById('screen-register').classList.add('hidden');
+            document.getElementById('screen-ending').classList.add('hidden');
+
+            if (stageNum === 1) {
+                document.getElementById('screen-story-1').classList.remove('hidden');
+            } else if (stageNum === 2) {
+                document.getElementById('screen-story-2').classList.remove('hidden');
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('screen-story-1').classList.add('hidden');
+            document.getElementById('screen-story-2').classList.add('hidden');
+            document.getElementById('screen-register').classList.remove('hidden');
+        }
+
+        function selectAvatar(id, url, name) {
+            jawaraCharacters.forEach(char => {
+                const card = document.getElementById(`char-card-${char.id}`);
+                card.classList.remove('border-sunda-gold', 'bg-sunda-gold/10', 'glow-gold');
+                card.classList.add('border-slate-800', 'bg-sunda-dark');
+            });
+
+            const selectedCard = document.getElementById(`char-card-${id}`);
+            selectedCard.classList.remove('border-slate-800', 'bg-sunda-dark');
+            selectedCard.classList.add('border-sunda-gold', 'bg-sunda-gold/10', 'glow-gold');
+
+            playerProfile.avatarId = id;
+            playerProfile.avatarUrl = url;
+            playerProfile.avatarName = name;
+        }
+
+        function registerPlayer() {
+            const nameInput = document.getElementById('input-name').value.trim();
+            const classInput = document.getElementById('input-class').value.trim();
+
+            if (!nameInput) {
+                customAlert("Registrasi Gagal", "Silakan masukkan nama Jawara kamu terlebih dahulu!", "⚠️");
+                return;
+            }
+            if (!classInput) {
+                customAlert("Registrasi Gagal", "Silakan tentukan kelas kamu (SMP/SMA)!", "⚠️");
+                return;
+            }
+            if (playerProfile.avatarId === null) {
+                customAlert("Registrasi Gagal", "Silakan pilih salah satu dari 10 Karakter Jawara!", "⚠️");
+                return;
+            }
+
+            playerProfile.name = nameInput;
+            playerProfile.class = classInput;
+
+            document.getElementById('player-name-header').innerText = playerProfile.name;
+            document.getElementById('player-class-header').innerText = `Kelas ${playerProfile.class}`;
+            
+            const headerAvatar = document.getElementById('player-avatar-header');
+            headerAvatar.src = playerProfile.avatarUrl;
+            headerAvatar.setAttribute('data-name', playerProfile.avatarName);
+            
+            document.getElementById('header-profile').classList.remove('hidden');
+            document.getElementById('header-profile').classList.add('flex');
+
+            startGame();
+        }
+
+        function updateStats() {
+            document.getElementById('player-score').innerText = score;
+        }
+
+        function showCredit() {
+            document.getElementById('credit-modal').classList.remove('hidden');
+            document.getElementById('credit-modal').classList.add('flex');
+        }
+
+        function closeCredit() {
+            document.getElementById('credit-modal').classList.add('hidden');
+            document.getElementById('credit-modal').classList.remove('flex');
+        }
+
+        // Accordion toggle inside Leaderboard modal
+        function toggleIntegrationAccordion() {
+            const panel = document.getElementById('integration-panel');
+            const arrow = document.getElementById('accordion-arrow');
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                arrow.innerText = '▲';
+            } else {
+                panel.classList.add('hidden');
+                arrow.innerText = '▼';
+            }
+        }
+
+        // Save Settings directly within Leaderboard modal
+        function saveSettings() {
+            const inputUrl = document.getElementById('setting-script-url').value.trim();
+            localStorage.setItem("jagat_data_script_url", inputUrl);
+            SCRIPT_URL = inputUrl;
+            
+            // Auto close accordion upon saving
+            toggleIntegrationAccordion();
+            
+            customAlert("Setelan Disimpan", "Tautan database Google Sheets berhasil diperbarui dan disimpan dalam penyimpanan lokal peramban Anda!", "⚙️");
+            fetchLeaderboard(); // refresh leaderboard
+        }
+
+        // Leaderboard UI controls
+        function openLeaderboard() {
+            document.getElementById('leaderboard-modal').classList.remove('hidden');
+            document.getElementById('leaderboard-modal').classList.add('flex');
+            
+            // Load saved input values
+            const currentUrl = localStorage.getItem("jagat_data_script_url") || "";
+            document.getElementById('setting-script-url').value = currentUrl;
+            
+            fetchLeaderboard();
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboard-modal').classList.add('hidden');
+            document.getElementById('leaderboard-modal').classList.remove('flex');
+        }
+
+        function fetchLeaderboard() {
+            const btn = document.getElementById('btn-sync-leaderboard');
+            const tbody = document.getElementById('leaderboard-table-body');
+            
+            if (btn) {
+                btn.innerText = "⏳ Memuat...";
+                btn.disabled = true;
+            }
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="p-8 text-center text-gray-500 italic">
+                        Memuat data peringkat terbaru dari Spreadsheet...
+                    </td>
+                </tr>
+            `;
+
+            if (!SCRIPT_URL) {
+                setTimeout(() => {
+                    renderMockLeaderboard();
+                    if (btn) {
+                        btn.innerText = "🔄 Sinkron Data";
+                        btn.disabled = false;
+                    }
+                }, 800);
+                return;
+            }
+
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        tbody.innerHTML = data.map((row, index) => `
+                            <tr class="border-b border-slate-800 hover:bg-slate-900/50 transition-colors">
+                                <td class="p-3 text-center font-extrabold ${index === 0 ? 'text-sunda-gold text-sm' : index === 1 ? 'text-gray-300' : index === 2 ? 'text-amber-600' : 'text-slate-500'}">
+                                    ${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
+                                </td>
+                                <td class="p-3 font-semibold text-white">${row.name}</td>
+                                <td class="p-3 text-slate-300">${row.class}</td>
+                                <td class="p-3 text-slate-400">${row.avatar}</td>
+                                <td class="p-3 text-right font-extrabold text-sunda-neonBlue">${row.score}</td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="p-8 text-center text-gray-500 italic">
+                                    Database masih kosong. Jadilah yang pertama mengisi papan peringkat!
+                                </td>
+                            </tr>
+                        `;
+                    }
+                })
+                .catch(err => {
+                    renderMockLeaderboard();
+                })
+                .finally(() => {
+                    if (btn) {
+                        btn.innerText = "🔄 Sinkron Data";
+                        btn.disabled = false;
+                    }
+                });
+        }
+
+        function syncScoreToSpreadsheet() {
+            if (!SCRIPT_URL || !playerProfile.name) return;
+
+            const payload = {
+                name: playerProfile.name,
+                class: playerProfile.class,
+                avatar: playerProfile.avatarName || "Jawara",
+                score: score
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }).catch(e => console.log("Database Sync Offline Fallback Enabled"));
+        }
+
+        function renderMockLeaderboard() {
+            const tbody = document.getElementById('leaderboard-table-body');
+            const mockData = [
+                { name: "Siliwangi Cyber", class: "X-Mipa 1", avatar: "Siliwangi", score: 1200 },
+                { name: "Neng Sarah", class: "VIII-A", avatar: "Kusuma", score: 950 },
+                { name: "Asep Algoritma", class: "IX-C", avatar: "Prabu", score: 700 }
+            ];
+
+            if (playerProfile.name && score > 0) {
+                mockData.push({
+                    name: playerProfile.name,
+                    class: playerProfile.class,
+                    avatar: playerProfile.avatarName || "Jawara",
+                    score: score
+                });
+            }
+
+            mockData.sort((a, b) => b.score - a.score);
+
+            tbody.innerHTML = mockData.map((row, index) => `
+                <tr class="border-b border-slate-800 hover:bg-slate-900/50 transition-colors">
+                    <td class="p-3 text-center font-extrabold ${index === 0 ? 'text-sunda-gold text-sm' : index === 1 ? 'text-gray-300' : index === 2 ? 'text-amber-600' : 'text-slate-500'}">
+                        ${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
+                    </td>
+                    <td class="p-3 font-semibold text-white">${row.name} ${row.name === playerProfile.name ? '<span class="text-[9px] bg-sunda-gold/20 text-sunda-gold px-1 rounded ml-1">Kamu</span>' : ''}</td>
+                    <td class="p-3 text-slate-300">${row.class}</td>
+                    <td class="p-3 text-slate-400">${row.avatar}</td>
+                    <td class="p-3 text-right font-extrabold text-sunda-neonBlue">${row.score}</td>
+                </tr>
+            `).join('');
+        }
+
+        function startGame() {
+            document.getElementById('screen-register').classList.add('hidden');
+            document.getElementById('screen-map').classList.remove('hidden');
+            renderMap();
+        }
+
+        function openToko() {
+            document.getElementById('toko-modal').classList.remove('hidden');
+            document.getElementById('toko-modal').classList.add('flex');
+        }
+
+        function closeToko() {
+            document.getElementById('toko-modal').classList.add('hidden');
+            document.getElementById('toko-modal').classList.remove('flex');
+        }
+
+        function buyItem(name, cost) {
+            if (score >= cost) {
+                if (inventory.includes(name)) {
+                    customAlert("Gagal", "Kamu sudah memiliki item ini!", "❌");
+                    return;
+                }
+                score -= cost;
+                inventory.push(name);
+                updateStats();
+                customAlert("Berhasil", `Kamu telah membeli <b>${name}</b>! Terima kasih telah berkontribusi melestarikan budaya Sunda.`, "🎉");
+            } else {
+                customAlert("Gagal", "Poin Pangaweruh kamu belum mencukupi untuk membeli item ini. Teruskan petualanganmu!", "⚠️");
+            }
+        }
+
+        function renderMap() {
+            for (let i = 1; i <= 5; i++) {
+                const node = document.getElementById(`node-${i}`);
+                const circle = document.getElementById(`circle-${i}`);
+                if (unlockedLevels.includes(i)) {
+                    node.classList.remove('opacity-50', 'cursor-not-allowed');
+                    node.removeAttribute('disabled');
+                    if (circle) {
+                        circle.className = "w-16 h-16 rounded-full bg-sunda-neonBlue text-sunda-dark flex items-center justify-center font-extrabold text-xl glow-blue ring-4 ring-sunda-dark cursor-pointer";
+                        if (i === 5) circle.className = "w-16 h-16 rounded-full bg-sunda-gold text-sunda-dark flex items-center justify-center font-extrabold text-xl glow-gold ring-4 ring-sunda-dark cursor-pointer";
+                    }
+                } else {
+                    node.classList.add('opacity-50', 'cursor-not-allowed');
+                    node.setAttribute('disabled', 'true');
+                    if (circle) {
+                        circle.className = "w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark";
+                    }
+                }
+            }
+        }
+
+        function selectLevel(levelNum) {
+            activeLevel = levelNum;
+            document.getElementById('screen-map').classList.add('hidden');
+            document.getElementById('screen-play').classList.remove('hidden');
+
+            clearInterval(bossTimerInterval);
+
+            document.getElementById('level-title-tag').innerText = `LEVEL ${levelNum}`;
+            document.getElementById('guide-subtitle').innerHTML = levelExplanations[levelNum].title;
+            document.getElementById('guide-text').innerHTML = levelExplanations[levelNum].desc;
+
+            document.getElementById('challenge-playground').innerHTML = `
+                <div class="text-center space-y-4">
+                    <span class="text-5xl">📖</span>
+                    <h4 class="text-lg font-bold text-sunda-gold">Pelajari Materi di Atas Terlebih Dahulu</h4>
+                    <p class="text-sm text-gray-400 max-w-md mx-auto">Klik tombol "Saya Siap! Mulai Tantangan ⚡" pada penjelasan Kang Kuri untuk menguji pengetahuan dan keterampilan koding data kamu.</p>
+                </div>
+            `;
+        }
+
+        function startLevelChallenge() {
+            const playground = document.getElementById('challenge-playground');
+            
+            if (activeLevel === 1) {
+                setupLevel1(playground);
+            } else if (activeLevel === 2) {
+                setupLevel2(playground);
+            } else if (activeLevel === 3) {
+                setupLevel3(playground);
+            } else if (activeLevel === 4) {
+                setupLevel4(playground);
+            } else if (activeLevel === 5) {
+                setupLevel5(playground);
+            }
+        }
+
+        // ----------------- LEVEL 1 IMPLEMENTATION -----------------
+        let userSequence = [];
+        const correctSequence = [
+            "Ambil Beras",
+            "Cuci Beras",
+            "Masukkan Air",
+            "Tambahkan Rempah (Sereh & Salam)",
+            "Nyalakan Api",
+            "Tunggu Masak"
+        ];
+
+        function setupLevel1(container) {
+            userSequence = [];
+            let shuffled = [...correctSequence].sort(() => Math.random() - 0.5);
+            
+            container.innerHTML = `
+                <div class="w-full text-center space-y-6">
+                    <div class="bg-sunda-dark border border-slate-700 p-3 rounded-lg text-xs max-w-md mx-auto text-gray-400">
+                        <b>Tugas:</b> Klik setiap langkah secara berurutan sesuai dengan logika membuat Nasi Liwet Sunda tradisional!
+                    </div>
+                    
+                    <!-- Drag/Click Pool -->
+                    <div class="flex flex-wrap gap-2 justify-center" id="pool-container">
+                        ${shuffled.map((item, index) => `
+                            <button onclick="addToSequence('${item}', this)" class="bg-sunda-dark hover:bg-slate-800 text-xs md:text-sm text-white font-semibold py-2 px-4 rounded-xl border border-slate-600 transition-all duration-300">
+                                ${item}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- User Selected Area -->
+                    <div class="border-2 border-dashed border-sunda-neonBlue/40 p-4 rounded-2xl min-h-[100px] bg-slate-900/50">
+                        <h4 class="text-xs text-sunda-neonBlue font-extrabold uppercase mb-3">URUTAN ALGORITMA ANDA:</h4>
+                        <div id="selected-container" class="flex flex-wrap gap-2 justify-center">
+                            <span class="text-xs text-gray-500 italic">Belum ada langkah yang dipilih...</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-3">
+                        <button onclick="resetLevel1()" class="px-5 py-2 bg-slate-800 text-gray-400 font-bold rounded-lg text-xs transition-all">Reset</button>
+                        <button onclick="checkLevel1()" class="px-5 py-2 bg-sunda-neonBlue text-sunda-dark font-extrabold rounded-lg text-xs transition-all glow-blue">Jalankan Kode ▶️</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToSequence(item, btn) {
+            btn.style.display = 'none';
+            userSequence.push(item);
+            
+            const selectedContainer = document.getElementById('selected-container');
+            if (userSequence.length === 1) selectedContainer.innerHTML = '';
+            
+            selectedContainer.innerHTML += `
+                <span class="bg-sunda-neonBlue/10 text-sunda-neonBlue border border-sunda-neonBlue/30 text-xs py-1 px-3 rounded-lg flex items-center gap-1">
+                    ${userSequence.length}. ${item}
+                </span>
+            `;
+        }
+
+        function resetLevel1() {
+            setupLevel1(document.getElementById('challenge-playground'));
+        }
+
+        // Logic check Level 1
+        function checkLevel1() {
+            let matches = true;
+            if (userSequence.length !== correctSequence.length) {
+                customAlert("Algoritma Belum Lengkap", "Kamu harus memilih semua langkah sebelum menjalankan program!", "⚠️");
+                return;
+            }
+
+            for (let i = 0; i < correctSequence.length; i++) {
+                if (userSequence[i] !== correctSequence[i]) {
+                    matches = false;
+                    break;
+                }
+            }
+
+            if (matches) {
+                gainPangaweruh(100, 2);
+                customAlert("SUCCESS! (Silih Asah)", "Selamat! Algoritma kamu benar. Ibu-ibu desa berhasil menyajikan nasi liwet yang nikmat tanpa gosong. Batu Kecerdasan Pertama berhasil kamu pulihkan!", "🌾");
+            } else {
+                customAlert("EROR: Logika Salah", "Aduh! Nasi liwetnya bantet atau gosong karena urutannya terbalik! Coba pikirkan kembali, bisakah menyalakan api sebelum beras dicuci? Yuk reset dan coba lagi.", "❌");
+                resetLevel1();
+            }
+        }
+
+        // ----------------- LEVEL 2 IMPLEMENTATION -----------------
+        let cropData = [
+            { id: 1, crop: "Padi", amount: 150, status: "Valid" },
+            { id: 2, crop: "Padi", amount: 150, status: "Duplikat" }, // Duplikat
+            { id: 3, crop: "Singkong", amount: 120, status: "Valid" },
+            { id: 4, crop: "Talas", amount: 0, status: "Eror/Kosong" }, // Eror/Kosong
+            { id: 5, crop: "Jagung", amount: 90, status: "Valid" },
+            { id: 6, crop: "Jagung", amount: 90, status: "Duplikat" }  // Duplikat
+        ];
+        let currentCrops = [];
+
+        function setupLevel2(container) {
+            currentCrops = JSON.parse(JSON.stringify(cropData));
+            renderLevel2(container);
+        }
+
+        function renderLevel2(container) {
+            container.innerHTML = `
+                <div class="w-full text-center space-y-6">
+                    <div class="bg-sunda-dark border border-slate-700 p-3 rounded-lg text-xs max-w-md mx-auto text-gray-400">
+                        <b>Tugas:</b> Bersihkan data kotor di bawah ini! Klik tombol 🗑️ pada baris data yang bernilai <b>Duplikat</b> atau <b>Eror/Kosong</b>.
+                    </div>
+
+                    <!-- Interactive Data Table -->
+                    <div class="overflow-x-auto w-full max-w-lg mx-auto bg-sunda-dark border border-slate-700 rounded-xl">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800/80 border-b border-slate-700 text-[10px] md:text-xs text-sunda-gold uppercase tracking-wider">
+                                    <th class="p-3">ID</th>
+                                    <th class="p-3">Nama Komoditas</th>
+                                    <th class="p-3">Jumlah Panen (Kw)</th>
+                                    <th class="p-3">Kondisi Data</th>
+                                    <th class="p-3 text-center">Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs text-gray-300">
+                                ${currentCrops.map((row) => `
+                                    <tr class="border-b border-slate-800 hover:bg-slate-900/50 transition-colors">
+                                        <td class="p-3 font-semibold text-slate-500">${row.id}</td>
+                                        <td class="p-3">${row.crop}</td>
+                                        <td class="p-3">${row.amount === 0 ? '<span class="text-red-500">NaN (Null)</span>' : row.amount}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${row.status === 'Valid' ? 'bg-sunda-neonGreen/10 text-sunda-neonGreen' : 'bg-red-500/10 text-red-400'}">
+                                                ${row.status}
+                                            </span>
+                                        </td>
+                                        <td class="p-3 text-center">
+                                            <button onclick="deleteRow(${row.id})" class="text-red-400 hover:text-red-600 transition-colors text-base font-bold">🗑️</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-center gap-3">
+                        <button onclick="resetLevel2()" class="px-5 py-2 bg-slate-800 text-gray-400 font-bold rounded-lg text-xs transition-all">Reset</button>
+                        <button onclick="checkLevel2()" class="px-5 py-2 bg-sunda-neonBlue text-sunda-dark font-extrabold rounded-lg text-xs transition-all glow-blue">Selesai & Kirim</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function deleteRow(id) {
+            currentCrops = currentCrops.filter(row => row.id !== id);
+            renderLevel2(document.getElementById('challenge-playground'));
+        }
+
+        function resetLevel2() {
+            setupLevel2(document.getElementById('challenge-playground'));
+        }
+
+        function checkLevel2() {
+            const leftovers = currentCrops.filter(row => row.status === "Duplikat" || row.status === "Eror/Kosong");
+            const valids = currentCrops.filter(row => row.status === "Valid");
+
+            if (leftovers.length === 0 && valids.length === 3) {
+                gainPangaweruh(150, 3);
+                customAlert("BERHASIL! (Silih Asih)", "Hebat! Data pangan di Lumbung (Leuit) Tatar Sunda sekarang bersih dan akurat. Masyarakat tahu persis kapan harus mulai menanam berdasarkan visualisasi data. Batu Kecerdasan Kedua didapatkan!", "🌾");
+            } else {
+                customAlert("DATA MASIH KOTOR", "Oh tidak! Masih ada data palsu, kosong, atau data ganda yang tersisa, atau kamu salah menghapus data valid. Yuk reset dan saring lagi lebih teliti!", "❌");
+                resetLevel2();
+            }
+        }
+
+        // ----------------- LEVEL 3 IMPLEMENTATION -----------------
+        let modelAccuracy = 0;
+        const totalItemsToTrain = 5;
+
+        const aiDataset = [
+            { name: "Daun Sirih", category: "Obat", desc: "Sangat baik untuk penyembuhan luar & antiseptik alami." },
+            { name: "Daun Jelatang", category: "Beracun", desc: "Menimbulkan gatal-gatal parah jika tersentuh kulit." },
+            { name: "Kecapi", category: "Alat Musik", desc: "Alat musik petik Sunda yang menghasilkan nada indah." },
+            { name: "Suling Bambu", category: "Alat Musik", desc: "Ditiup untuk mengiringi tembang Sunda yang syahdu." },
+            { name: "Daun Kumis Kucing", category: "Obat", desc: "Tanaman herbal untuk melancarkan saluran kemih." }
+        ];
+        let trainingIndex = 0;
+        let classifiedCorrectly = 0;
+
+        function setupLevel3(container) {
+            trainingIndex = 0;
+            classifiedCorrectly = 0;
+            modelAccuracy = 0;
+            renderLevel3(container);
+        }
+
+        function renderLevel3(container) {
+            if (trainingIndex >= totalItemsToTrain) {
+                modelAccuracy = Math.round((classifiedCorrectly / totalItemsToTrain) * 100);
+                container.innerHTML = `
+                    <div class="w-full text-center space-y-6">
+                        <span class="text-5xl">🤖</span>
+                        <h4 class="text-xl font-extrabold text-white">PELATIHAN AI BATARA DATA SELESAI</h4>
+                        <div class="max-w-xs mx-auto bg-sunda-dark border border-slate-700 p-4 rounded-xl">
+                            <div class="text-xs text-gray-400">AKURASI MODEL:</div>
+                            <div class="text-3xl font-black ${modelAccuracy >= 80 ? 'text-sunda-neonGreen' : 'text-red-400'}">${modelAccuracy}%</div>
+                        </div>
+
+                        ${modelAccuracy >= 80 ? `
+                            <button onclick="finishLevel3()" class="px-6 py-3 bg-sunda-neonBlue text-sunda-dark font-extrabold rounded-lg text-sm glow-blue tracking-wider">AKTIFKAN BOT BATARA DATA</button>
+                        ` : `
+                            <p class="text-xs text-red-400">Akurasi di bawah 80%! AI masih bisa keliru membedakan tanaman beracun. Silakan latih ulang dengan data yang benar!</p>
+                            <button onclick="resetLevel3()" class="px-5 py-2 bg-slate-800 text-white font-bold rounded-lg text-xs">Ulangi Pelatihan 🔄</button>
+                        `}
+                    </div>
+                `;
+                return;
+            }
+
+            const currentObj = aiDataset[trainingIndex];
+            container.innerHTML = `
+                <div class="w-full text-center space-y-6">
+                    <div class="bg-sunda-dark border border-slate-700 p-3 rounded-lg text-xs max-w-md mx-auto text-gray-400">
+                        <b>Tugas:</b> Klasifikasikan objek berikut untuk mengajari kecerdasan artifisial (AI) Batara Data!
+                    </div>
+
+                    <!-- AI Visual Card -->
+                    <div class="max-w-sm mx-auto bg-slate-900 border-2 border-sunda-neonGreen/40 p-5 rounded-2xl glow-green">
+                        <span class="text-4xl">📦</span>
+                        <h4 class="text-lg font-bold text-white mt-2">${currentObj.name}</h4>
+                        <p class="text-xs text-gray-400 mt-1">${currentObj.desc}</p>
+                    </div>
+
+                    <!-- Buttons to classify -->
+                    <div class="flex flex-col sm:flex-row justify-center gap-3">
+                        <button onclick="classifyItem('Obat')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition-all">🌱 Tanaman Obat</button>
+                        <button onclick="classifyItem('Beracun')" class="px-6 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-xs transition-all">☠️ Tanaman Beracun</button>
+                        <button onclick="classifyItem('Alat Musik')" class="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition-all">🎵 Alat Musik Sunda</button>
+                    </div>
+
+                    <div class="text-xs text-gray-500">Progress Latih: ${trainingIndex + 1} / ${totalItemsToTrain}</div>
+                </div>
+            `;
+        }
+
+        function classifyItem(userChoice) {
+            const currentObj = aiDataset[trainingIndex];
+            if (userChoice === currentObj.category) {
+                classifiedCorrectly++;
+            }
+            trainingIndex++;
+            renderLevel3(document.getElementById('challenge-playground'));
+        }
+
+        function resetLevel3() {
+            setupLevel3(document.getElementById('challenge-playground'));
+        }
+
+        function finishLevel3() {
+            gainPangaweruh(200, 4);
+            customAlert("AKURASI OPTIMAL! (Silih Asuh)", "Keren! Batara Data kini memiliki kecerdasan klasifikasi yang luar biasa. Ia kembali menjaga Curug AI dan memberikan Batu Kecerdasan Ketiga kepada Jawara!", "⚡");
+        }
+
+        // ----------------- LEVEL 4 IMPLEMENTATION -----------------
+        let scoreLvl4 = 0;
+
+        const dataPool = [
+            { type: "Transportasi", text: "🚌 Data Rute Trans Metro Bandung", isGood: true },
+            { type: "Layanan Publik", text: "🚰 Sensor Air Bersih PDAM", isGood: true },
+            { type: "Iklan Spam", text: "💸 Iklan Judi Online Ilegal", isGood: false },
+            { type: "Hoaks", text: "📢 Berita Palsu: Danau Bandung Kering Besok", isGood: false }
+        ];
+
+        function setupLevel4(container) {
+            scoreLvl4 = 0;
+            container.innerHTML = `
+                <div class="w-full text-center space-y-6">
+                    <div class="bg-sunda-dark border border-slate-700 p-3 rounded-lg text-xs max-w-md mx-auto text-gray-400">
+                        <b>Tugas:</b> Kota tenggelam dalam aliran Mahadata berkecepatan tinggi! <b>Saring Jagat:</b> Loloskan data yang valid & Blokir data hoaks/spam!
+                    </div>
+
+                    <!-- Current Data Stream Container -->
+                    <div id="data-stream-box" class="h-40 bg-sunda-dark border border-slate-700 rounded-xl flex flex-col items-center justify-center p-4 overflow-hidden relative">
+                        <div id="stream-text" class="text-sm font-bold text-sunda-neonBlue tracking-wider animate-bounce">Mempersiapkan Aliran Data...</div>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="handleFilterAction(false)" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-lg text-xs transition-all">❌ BLOKIR (Spam/Hoaks)</button>
+                        <button onclick="handleFilterAction(true)" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-extrabold rounded-lg text-xs transition-all">✅ LOLOSKAN (Fakta/Layanan)</button>
+                    </div>
+
+                    <div class="flex justify-between max-w-xs mx-auto text-xs font-bold">
+                        <span>Poin Saringan: <span id="lvl4-score" class="text-sunda-gold">0</span>/5</span>
+                    </div>
+                </div>
+            `;
+            generateNewStreamItem();
+        }
+
+        let currentActiveItem = null;
+
+        function generateNewStreamItem() {
+            currentActiveItem = dataPool[Math.floor(Math.random() * dataPool.length)];
+            const streamBox = document.getElementById('stream-text');
+            if (streamBox) {
+                streamBox.innerHTML = `
+                    <div class="text-center">
+                        <span class="text-xs bg-slate-800 text-sunda-gold px-2 py-1 rounded border border-sunda-gold/20 font-bold uppercase">${currentActiveItem.type}</span>
+                        <p class="text-sm text-white mt-2">${currentActiveItem.text}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function handleFilterAction(userDecision) {
+            if (!currentActiveItem) return;
+
+            if (userDecision === currentActiveItem.isGood) {
+                scoreLvl4++;
+            } else {
+                scoreLvl4 = Math.max(0, scoreLvl4 - 1);
+            }
+
+            const scoreDisplay = document.getElementById('lvl4-score');
+            if (scoreDisplay) scoreDisplay.innerText = scoreLvl4;
+
+            if (scoreLvl4 >= 5) {
+                gainPangaweruh(250, 5);
+                customAlert("DASBOR KOTA PULIH!", "Luar biasa, Jawara! Penyaringan Big Data dengan kecepatan kilat (Velocity) telah berhasil menyelamatkan pusat kendali Kota futuristik Tatar Sunda. Batu Kecerdasan Keempat di tanganmu!", "🏙️");
+            } else {
+                generateNewStreamItem();
+            }
+        }
+
+        // ----------------- LEVEL 5 IMPLEMENTATION -----------------
+        let bossHealth = 100;
+        let currentBossStage = 1;
+
+        function setupLevel5(container) {
+            bossHealth = 100;
+            currentBossStage = 1;
+            renderLevel5(container);
+        }
+
+        function renderLevel5(container) {
+            container.innerHTML = `
+                <div class="w-full text-center space-y-6 animate-fade-in">
+                    <div class="bg-sunda-dark border border-slate-700 p-3 rounded-lg text-xs max-w-md mx-auto text-gray-400">
+                        <b>Tahap Akhir (5 Pertanyaan):</b> Pecahkan proteksi Raksasa Kabut Informasi menggunakan semua teori koding dan analisis data yang kamu pelajari!
+                    </div>
+
+                    <!-- Boss Health Bar -->
+                    <div class="max-w-md mx-auto space-y-2">
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-400">
+                            <span>👾 RAKSASA KABUT INFORMASI</span>
+                            <span class="text-red-400 font-extrabold" id="boss-health-text">${Math.round(bossHealth)}% HP</span>
+                        </div>
+                        <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                            <div id="boss-bar" class="h-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-500" style="width: ${bossHealth}%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Bar (10 Second Timer Revision) -->
+                    <div class="max-w-md mx-auto space-y-2 mt-4">
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-400">
+                            <span class="text-sunda-neonBlue">⏳ SISA WAKTU MENJAWAB:</span>
+                            <span class="text-sunda-neonGreen font-extrabold" id="boss-timer-text">10 Detik</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                            <div id="boss-timer-bar" class="h-full bg-gradient-to-r from-sunda-neonBlue to-sunda-neonGreen transition-all duration-100" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Stage Interactive Quiz Box -->
+                    <div class="bg-slate-900 border border-sunda-gold/30 p-5 rounded-2xl max-w-lg mx-auto">
+                        <div id="boss-question-container">
+                            ${getBossStageContent()}
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-slate-500">Misi Tahap: ${currentBossStage} / 5</div>
+                </div>
+            `;
+            startBossTimer();
+        }
+
+        // 5 questions with randomized correct answers (Not all A)
+        function getBossStageContent() {
+            if (currentBossStage === 1) {
+                return `
+                    <span class="text-xs text-sunda-neonBlue font-bold tracking-widest uppercase">Fase 1: Logika Koding Kampung Algoritma</span>
+                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Di Kampung Algoritma, kita menyusun langkah membuat nasi liwet. Mengapa urutan (sequence) sangat penting dalam algoritma pemrograman?</h4>
+                    <div class="grid grid-cols-1 gap-2 mt-4 text-left">
+                        <button onclick="attackBoss(false, 1)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Agar kode program terlihat estetik, rapi, dan mudah dibaca tanpa mengutamakan fungsi.</button>
+                        <button onclick="attackBoss(true, 1)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Karena komputer mengeksekusi instruksi secara kaku baris-demi-baris dari atas ke bawah.</button>
+                    </div>
+                `;
+            } else if (currentBossStage === 2) {
+                return `
+                    <span class="text-xs text-sunda-neonGreen font-bold tracking-widest uppercase">Fase 2: Pembersihan Leuweung Data</span>
+                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Dalam pembersihan data (data cleaning) di Leuweung Data, apa langkah yang tepat jika kita menemukan data kosong (NaN/Null) pada kolom hasil panen?</h4>
+                    <div class="grid grid-cols-1 gap-2 mt-4 text-left">
+                        <button onclick="attackBoss(true, 2)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Menghapus baris kosong tersebut atau mengisinya dengan nilai rata-rata (mean) yang valid.</button>
+                        <button onclick="attackBoss(false, 2)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Mengganti angka kosong tersebut dengan angka acak sesuka hati tanpa perhitungan agar tabel cepat penuh.</button>
+                    </div>
+                `;
+            } else if (currentBossStage === 3) {
+                return `
+                    <span class="text-xs text-purple-400 font-bold tracking-widest uppercase">Fase 3: Pelatihan Curug AI</span>
+                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Bagaimana cara meningkatkan akurasi klasifikasi AI Batara Data di Curug AI agar tidak salah membedakan tanaman obat dan beracun?</h4>
+                    <div class="grid grid-cols-1 gap-2 mt-4 text-left">
+                        <button onclick="attackBoss(false, 3)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Menghapus seluruh program klasifikasi AI dan menggantinya dengan pencarian manual di internet.</button>
+                        <button onclick="attackBoss(true, 3)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Memberikan data latih (training data) yang seimbang, bervariasi, serta melabelinya dengan benar.</button>
+                    </div>
+                `;
+            } else if (currentBossStage === 4) {
+                return `
+                    <span class="text-xs text-yellow-400 font-bold tracking-widest uppercase">Fase 4: Saringan Kota Mahadata</span>
+                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Karakteristik Big Data ditandai dengan prinsip 3V (Volume, Velocity, Variety). Apa arti dari Variety (Keberagaman)?</h4>
+                    <div class="grid grid-cols-1 gap-2 mt-4 text-left">
+                        <button onclick="attackBoss(true, 4)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Data terdiri dari berbagai macam format terstruktur dan tidak terstruktur, seperti teks, video, suara, dan GPS.</button>
+                        <button onclick="attackBoss(false, 4)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Kecepatan transmisi transfer data dalam jaringan serat optik kota yang sangat cepat real-time.</button>
+                    </div>
+                `;
+            } else if (currentBossStage === 5) {
+                return `
+                    <span class="text-xs text-sunda-gold font-bold tracking-widest uppercase">Fase 5: Nilai Luhur Silih Asuh</span>
+                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Berdasarkan nilai luhur Sunda 'Silih Asuh' (saling membimbing), bagaimana etika menggunakan kecerdasan buatan dalam kehidupan sehari-hari?</h4>
+                    <div class="grid grid-cols-1 gap-2 mt-4 text-left">
+                        <button onclick="attackBoss(false, 5)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Memakai AI untuk menyalin karya orang lain seutuhnya dan mengakunya sebagai karya sendiri demi keuntungan.</button>
+                        <button onclick="attackBoss(true, 5)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Saling melindungi, menjaga privasi data, dan menggunakan AI secara bertanggung jawab untuk kesejahteraan masyarakat.</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Start countdown timer for Puncak Pusaka
+        function startBossTimer() {
+            bossTimeLeft = 10;
+            const timerText = document.getElementById('boss-timer-text');
+            const timerBar = document.getElementById('boss-timer-bar');
+            
+            if (timerText) timerText.innerText = "10 Detik";
+            if (timerBar) {
+                timerBar.style.width = "100%";
+                timerBar.className = "h-full bg-gradient-to-r from-sunda-neonBlue to-sunda-neonGreen transition-all duration-100";
+            }
+
+            clearInterval(bossTimerInterval);
+            bossTimerInterval = setInterval(() => {
+                bossTimeLeft--;
+                if (timerText) {
+                    timerText.innerText = `${bossTimeLeft} Detik`;
+                    if (bossTimeLeft <= 3) {
+                        timerText.className = "text-red-500 font-extrabold animate-bounce";
+                        if (timerBar) timerBar.className = "h-full bg-red-500 transition-all duration-300";
+                    } else {
+                        timerText.className = "text-sunda-neonGreen font-extrabold animate-pulse";
+                    }
+                }
+                if (timerBar) {
+                    timerBar.style.width = `${(bossTimeLeft / 10) * 100}%`;
+                }
+
+                if (bossTimeLeft <= 0) {
+                    clearInterval(bossTimerInterval);
+                    triggerBossGameOver();
+                }
+            }, 1000);
+        }
+
+        // Game Over Trigger when Boss Timer runs out
+        function triggerBossGameOver() {
+            clearInterval(bossTimerInterval);
+            score = 0;
+            activeLevel = 1;
+            unlockedLevels = [1];
+            updateStats();
+            
+            customAlert(
+                "WAKTU HABIS! 💥", 
+                "Aduh! Kamu terlalu lama berpikir sehingga Raksasa Kabut Informasi menyerang balik dengan badai disinformasi! <b>Seluruh progres penyelamatanmu terhapus.</b><br><br>Kamu dinyatakan kalah dan harus mengulang kembali dari <b>Level 1 (Kampung Algoritma)</b>.", 
+                "👾"
+            );
+            
+            document.getElementById('screen-play').classList.add('hidden');
+            document.getElementById('screen-map').classList.remove('hidden');
+            renderMap();
+        }
+
+        // Transition to final success screen
+        function showFinalEnding() {
+            document.getElementById('screen-play').classList.add('hidden');
+            document.getElementById('screen-map').classList.add('hidden');
+            
+            const endingScreen = document.getElementById('screen-ending');
+            endingScreen.classList.remove('hidden');
+            
+            score += 500;
+            updateStats();
+
+            syncScoreToSpreadsheet();
+        }
+
+        // Restart full game completely
+        function restartFullGame() {
+            score = 0;
+            activeLevel = 1;
+            unlockedLevels = [1];
+            inventory = [];
+            
+            playerProfile = {
+                name: "",
+                class: "",
+                avatarId: null,
+                avatarUrl: "",
+                avatarName: ""
+            };
+
+            document.getElementById('header-profile').classList.remove('flex');
+            document.getElementById('header-profile').classList.add('hidden');
+            
+            document.getElementById('input-name').value = '';
+            document.getElementById('input-class').value = '';
+            
+            document.getElementById('screen-ending').classList.add('hidden');
+            document.getElementById('screen-splash').classList.remove('hidden');
+            
+            updateStats();
+            renderCharacterGrid();
+        }
+
+        // ----------------- STATE UTILITIES -----------------
+        function gainPangaweruh(amount, nextLvl) {
+            score += amount;
+            updateStats();
+            
+            if (nextLvl && !unlockedLevels.includes(nextLvl)) {
+                unlockedLevels.push(nextLvl);
+            }
+            
+            document.getElementById('screen-play').classList.add('hidden');
+            document.getElementById('screen-map').classList.remove('hidden');
+            renderMap();
+        }
+    </script>
+</body>
+</html>
