@@ -24,6 +24,14 @@
             }
         }
     </script>
+    <!-- Deklarasi Awal Error-Handling Gambar -->
+    <script>
+        function handleAvatarError(img) {
+            img.onerror = null;
+            const name = img.getAttribute('data-name') || "JD";
+            img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=161F30&textColor=D4AF37`;
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body {
@@ -249,7 +257,7 @@
                     <div class="hidden md:block flex-grow h-0.5 bg-gradient-to-r from-sunda-neonBlue to-gray-600 z-10"></div>
 
                     <!-- Node 2: Leuweung Data -->
-                    <button id="node-2" onclick="selectLevel(2)" class="flex flex-col items-center opacity-50 cursor-not-allowed transition-transform hover:scale-110 focus:outline-none" disabled>
+                    <button id="node-2" onclick="selectLevel(2)" class="flex flex-col items-center opacity-50 cursor-not-allowed transition-transform hover:scale-110 focus:outline-none animate-pulse" disabled>
                         <div id="circle-2" class="w-16 h-16 rounded-full bg-gray-700 text-gray-400 flex items-center justify-center font-extrabold text-xl ring-4 ring-sunda-dark">2</div>
                         <span class="mt-2 text-xs font-extrabold text-gray-400 tracking-wider bg-sunda-dark/95 px-2 py-1 rounded border border-gray-700">LEUWEUNG DATA</span>
                         <span class="text-[10px] text-gray-300 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Analisis Data</span>
@@ -462,7 +470,7 @@
                 <p class="text-sm text-gray-400">Rekapitulasi nilai dan kecepatan komputasi siswa Tatar Sunda</p>
             </div>
 
-            <!-- COLLAPSIBLE ACCORDION: SETELAN & PANDUAN INTEGRASI SPREADSHEET -->
+            <!-- COLLAPSIBLE ACCORDION: SETELAN & TATA CARA HUBUNGKAN GOOGLE SCRIPT -->
             <div class="border border-slate-700 rounded-xl mb-4 bg-sunda-dark overflow-hidden shrink-0">
                 <button onclick="toggleIntegrationAccordion()" class="w-full text-left p-3 bg-slate-800/80 hover:bg-slate-800 text-xs font-extrabold text-sunda-gold flex justify-between items-center">
                     <span>⚙️ ATUR INTEGRASI & TATA CARA HUBUNGKAN GOOGLE SCRIPT</span>
@@ -615,6 +623,10 @@ function doGet() {
         let unlockedLevels = [1];
         let inventory = [];
 
+        // Penyelarasan Variabel Pewaktuan Global
+        let bossTimerInterval = null;
+        let bossTimeLeft = 10;
+
         // Dynamic script URL retrieved from localStorage (User-friendly embed config)
         let SCRIPT_URL = localStorage.getItem("jagat_data_script_url") || ""; 
 
@@ -750,12 +762,60 @@ function doGet() {
             }
         };
 
-        // Initialize App
-        window.onload = function() {
-            renderCharacterGrid();
-            loadPlayerProfile();
-            updateStats();
-        }
+        // Deep curriculum descriptions for the Learning Phase
+        const levelMateriData = {
+            1: {
+                materiTitle: "Dasar Pemrograman & Logika Komputasional",
+                materiConcept: "Untuk menggerakkan mesin secara terarah, kita menyusun barisan kode instruksi yang sistematis. Konsep utama koding dasar meliputi:",
+                materiPoints: [
+                    "<b>Sequence (Urutan):</b> Komputer membaca instruksi baris-demi-baris secara kaku dari atas ke bawah. Urutan tindakan yang terbalik dapat menyebabkan kegagalan logika.",
+                    "<b>Loop (Perulangan):</b> Mencegah pengetikan instruksi serupa berkali-kali. Berguna untuk memproses data berulang secara otomatis.",
+                    "<b>Condition (Kondisi/If-Else):</b> Mengatur komputer untuk mengambil keputusan logis yang berbeda tergantung pada situasi data yang ditemui."
+                ],
+                materiUsage: "Digunakan di Kampung Algoritma untuk menuntun siswa mengatur aktivitas pembuatan Nasi Liwet Sunda tradisional."
+            },
+            2: {
+                materiTitle: "Pembersihan, Struktur, & Interpretasi Data",
+                materiConcept: "Dalam teknologi informasi, data mentah harus diolah agar layak dibaca. Tahapan pengolahan data meliputi:",
+                materiPoints: [
+                    "<b>Jenis Data:</b> Membedakan data kualitatif (non-angka, kategori) dan kuantitatif (angka kuantitas).",
+                    "<b>Data Cleaning:</b> Membersihkan data rusak, kosong (NaN), atau data ganda (duplikat) agar tidak membiaskan keputusan akhir.",
+                    "<b>Visualisasi & Interpretasi:</b> Memetakan data angka ke dalam grafik visual (diagram batang/garis/lingkaran) sehingga mudah dianalisis untuk menentukan keputusan, seperti pola ramalan musim tanam (*Pranata Mangsa*)."
+                ],
+                materiUsage: "Digunakan di Leuweung Data untuk merestorasi database pertanian lumbung pangan (*Leuit*) desa."
+            },
+            3: {
+                materiTitle: "Konsep Kecerdasan Artifisial & Klasifikasi",
+                materiConcept: "Kecerdasan Buatan (AI) meniru cara berpikir kognitif manusia dengan menganalisis pola informasi historis:",
+                materiPoints: [
+                    "<b>Data Latih (Training Data):</b> Kumpulan sampel data (contoh: ribuan foto tanaman herbal) yang diinput agar sistem AI mengenali ciri visualnya.",
+                    "<b>Klasifikasi (Classification):</b> Algoritma AI yang mengelompokkan data baru ke dalam kelompok atau label yang sesuai.",
+                    "<b>Akurasi & Bias:</b> Jika data latih yang dimasukkan berat sebelah, keputusan klasifikasi AI akan mengalami bias dan menghasilkan akurasi yang buruk."
+                ],
+                materiUsage: "Digunakan di Curug AI untuk melatih modul klasifikasi Bot Batara Data agar mampu mengidentifikasi tanaman obat berkhasiat."
+            },
+            4: {
+                materiTitle: "Karakteristik & Teknologi Mahadata (Big Data 3V)",
+                materiConcept: "Ketika jumlah data melampaui kemampuan penyimpanan sistem komputer konvensional, fenomena Mahadata terjadi dengan tiga ciri utama (3V):",
+                materiPoints: [
+                    "<b>Volume (Ukuran):</b> Ukuran data masif berskala Terabyte hingga Zettabyte yang tersimpan dalam jaringan.",
+                    "<b>Velocity (Kecepatan):</b> Laju perpindahan data yang mengalir secara real-time dan berkecepatan tinggi, seperti arus media sosial atau sensor IoT.",
+                    "<b>Variety (Keberagaman):</b> Data hadir dalam ragam format tidak terstruktur seperti gambar, video, koordinat GPS, dan teks."
+                ],
+                materiUsage: "Digunakan di Kota Mahadata untuk mengoperasikan dasbor sensor perkotaan Sunda pintar."
+            },
+            5: {
+                materiTitle: "Integrasi Sistem & Etika Kebijakan Siber",
+                materiConcept: "Di level puncak ini, tidak ada materi baru, melainkan integrasi penuh dari:",
+                materiPoints: [
+                    "<b>Computational Thinking:</b> Menyusun struktur pertahanan.",
+                    "<b>Data Cleaning & Analysis:</b> Menyaring serangan hoaks dari musuh.",
+                    "<b>AI Model Optimization:</b> Menyetel ulang sistem pertahanan kecerdasan buatan Tatar Sunda agar kebal dari manipulasi data.",
+                    "<b>Etika (Silih Asih, Silih Asah, Silih Asuh):</b> Memahami bahwa teknologi harus dikendalikan secara bijak untuk kemaslahatan manusia, bukan untuk merusak."
+                ],
+                materiUsage: "Digunakan di Puncak Pusaka untuk memprogram ulang pertahanan superkomputer Pusaka Jagat Data dari serangan siber."
+            }
+        };
 
         // Beautiful SVG avatar fallback if Google Drive image load is restricted
         function handleAvatarError(img) {
@@ -1134,6 +1194,7 @@ function doGet() {
             }
         }
 
+        // Select a Level from Peta
         function selectLevel(levelNum) {
             activeLevel = levelNum;
             document.getElementById('screen-map').classList.add('hidden');
@@ -1145,11 +1206,52 @@ function doGet() {
             document.getElementById('guide-subtitle').innerHTML = levelExplanations[levelNum].title;
             document.getElementById('guide-text').innerHTML = levelExplanations[levelNum].desc;
 
-            document.getElementById('challenge-playground').innerHTML = `
-                <div class="text-center space-y-4">
-                    <span class="text-5xl">📖</span>
-                    <h4 class="text-lg font-bold text-sunda-gold">Pelajari Materi di Atas Terlebih Dahulu</h4>
-                    <p class="text-sm text-gray-400 max-w-md mx-auto">Klik tombol "Saya Siap! Mulai Tantangan ⚡" pada penjelasan Kang Kuri untuk menguji pengetahuan dan keterampilan koding data kamu.</p>
+            // Render beautiful Detailed Educational Card FIRST to guarantee learning before game!
+            showEducationalMateri(levelNum);
+        }
+
+        // STUNNING SYSTEM EXPLAINER
+        function showEducationalMateri(levelNum) {
+            const materi = levelMateriData[levelNum];
+            const playground = document.getElementById('challenge-playground');
+            
+            playground.innerHTML = `
+                <div class="w-full text-left space-y-6 animate-fade-in max-w-2xl">
+                    <!-- Icon & Title -->
+                    <div class="flex items-center space-x-3 border-b border-sunda-gold/20 pb-4">
+                        <span class="text-4xl">📚</span>
+                        <div>
+                            <span class="text-[10px] text-sunda-neonBlue font-black uppercase tracking-widest">Fase Belajar</span>
+                            <h4 class="text-lg md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sunda-gold to-white">${materi.materiTitle}</h4>
+                        </div>
+                    </div>
+
+                    <!-- Concept -->
+                    <div class="space-y-3">
+                        <p class="text-xs md:text-sm text-slate-300 leading-relaxed">${materi.materiConcept}</p>
+                        
+                        <!-- Structured Points -->
+                        <div class="space-y-2 bg-sunda-dark/50 p-4 rounded-xl border border-slate-800">
+                            ${materi.materiPoints.map(point => `
+                                <div class="flex items-start space-x-2 text-xs md:text-sm text-gray-300">
+                                    <span class="text-sunda-neonGreen select-none">✦</span>
+                                    <p class="leading-relaxed">${point}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Usage Context -->
+                    <div class="bg-sunda-dark/80 p-3 rounded-lg border-l-4 border-sunda-gold text-[11px] md:text-xs text-gray-400">
+                        <b>Penerapan Praktis:</b> ${materi.materiUsage}
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="flex justify-center pt-2">
+                        <button onclick="startLevelChallenge()" class="px-8 py-3.5 bg-gradient-to-r from-sunda-neonBlue to-cyan-400 text-sunda-dark text-xs md:text-sm font-black rounded-xl uppercase tracking-wider transition-all duration-300 transform hover:scale-105 glow-blue shadow-lg">
+                            Mulai Uji Tantangan Jawara ⚔️
+                        </button>
+                    </div>
                 </div>
             `;
         }
@@ -1234,7 +1336,6 @@ function doGet() {
             setupLevel1(document.getElementById('challenge-playground'));
         }
 
-        // Logic check Level 1
         function checkLevel1() {
             let matches = true;
             if (userSequence.length !== correctSequence.length) {
@@ -1422,7 +1523,6 @@ function doGet() {
             renderLevel3(document.getElementById('challenge-playground'));
         }
 
-        // Reset level AI training
         function resetLevel3() {
             setupLevel3(document.getElementById('challenge-playground'));
         }
@@ -1531,7 +1631,7 @@ function doGet() {
                         </div>
                     </div>
 
-                    <!-- Timer Bar (10 Second Timer Revision) -->
+                    <!-- Timer Bar -->
                     <div class="max-w-md mx-auto space-y-2 mt-4">
                         <div class="flex justify-between items-center text-xs font-bold text-gray-400">
                             <span class="text-sunda-neonBlue">⏳ SISA WAKTU MENJAWAB:</span>
@@ -1590,13 +1690,13 @@ function doGet() {
                     <h4 class="text-sm md:text-base font-bold text-white mt-2">Karakteristik Big Data ditandai dengan prinsip 3V (Volume, Velocity, Variety). Apa arti dari Variety (Keberagaman)?</h4>
                     <div class="grid grid-cols-1 gap-2 mt-4 text-left">
                         <button onclick="attackBoss(true, 4)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Data terdiri dari berbagai macam format terstruktur dan tidak terstruktur, seperti teks, video, suara, dan GPS.</button>
-                        <button onclick="attackBoss(false, 4)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Kecepatan transmisi transfer data dalam jaringan serat optik kota yang sangat cepat real-time.</button>
+                        <button onclick="attackBoss(false, 4)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Kecepatan transmisi transfer data dalam jaringan siber serat optik kota yang sangat cepat real-time.</button>
                     </div>
                 `;
             } else if (currentBossStage === 5) {
                 return `
                     <span class="text-xs text-sunda-gold font-bold tracking-widest uppercase">Fase 5: Nilai Luhur Silih Asuh</span>
-                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Berdasarkan nilai luhur Sunda 'Silih Asuh' (saling membimbing), bagaimana etika menggunakan kecerdasan buatan dalam kehidupan sehari-hari?</h4>
+                    <h4 class="text-sm md:text-base font-bold text-white mt-2">Berdasarkan nilai luhur Sunda 'Silih Asuh' (saling membimbing), bagaimana etika menggunakan kecerdasan buatan dalam kehidupan siber sehari-hari?</h4>
                     <div class="grid grid-cols-1 gap-2 mt-4 text-left">
                         <button onclick="attackBoss(false, 5)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">A. Memakai AI untuk menyalin karya orang lain seutuhnya dan mengakunya sebagai karya sendiri demi keuntungan.</button>
                         <button onclick="attackBoss(true, 5)" class="p-3 bg-sunda-dark hover:bg-slate-800 text-xs text-white rounded-lg border border-slate-700 transition-all">B. Saling melindungi, menjaga privasi data, dan menggunakan AI secara bertanggung jawab untuk kesejahteraan masyarakat.</button>
