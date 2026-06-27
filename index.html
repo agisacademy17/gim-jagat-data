@@ -1761,11 +1761,11 @@ function doGet() {
 
         // Start countdown timer for Puncak Pusaka
         function startBossTimer() {
-            bossTimeLeft = 10;
+            bossTimeLeft = 20;
             const timerText = document.getElementById('boss-timer-text');
             const timerBar = document.getElementById('boss-timer-bar');
             
-            if (timerText) timerText.innerText = "10 Detik";
+            if (timerText) timerText.innerText = "20 Detik";
             if (timerBar) {
                 timerBar.style.width = "100%";
                 timerBar.className = "h-full bg-gradient-to-r from-sunda-neonBlue to-sunda-neonGreen transition-all duration-100";
@@ -1784,7 +1784,7 @@ function doGet() {
                     }
                 }
                 if (timerBar) {
-                    timerBar.style.width = `${(bossTimeLeft / 10) * 100}%`;
+                    timerBar.style.width = `${(bossTimeLeft / 20) * 100}%`;
                 }
 
                 if (bossTimeLeft <= 0) {
